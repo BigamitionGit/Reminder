@@ -1,11 +1,11 @@
 import SwiftUI
-import Feature
+import Root
 
 @main
 struct iOSApp: App {
     var body: some Scene {
         WindowGroup {
-            AppView()
+            RootView()
         }
     }
 }

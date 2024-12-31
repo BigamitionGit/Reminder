@@ -29,7 +29,7 @@ public struct Reminder {
     }
 
     public init() {}
-    
+
     public var body: some ReducerOf<Self> {
         BindingReducer()
     }

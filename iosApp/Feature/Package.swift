@@ -21,15 +21,12 @@ let package = Package(
         .target(
             name: "Root",
             dependencies: [
-                .sharedKit,
-                .core,
-                .reminder,
-                .theme],
+                .reminder],
             plugins: [
                 .lint
             ]),
         .target(
-            name: "Reminder",
+            name: "ReminderFeature",
             dependencies: [
                 .sharedKit,
                 .core,
@@ -54,7 +51,7 @@ let package = Package(
 extension Target.Dependency: @unchecked Sendable {
     static let sharedKit: Target.Dependency = "SharedKit"
     static let theme: Target.Dependency = "Theme"
-    static let reminder: Target.Dependency = "Reminder"
+    static let reminder: Target.Dependency = "ReminderFeature"
     static let core: Target.Dependency = .product(name: "Core", package: "Core")
 }
 

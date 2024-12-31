@@ -5,7 +5,7 @@ import Root
 struct iOSApp: App {
     var body: some Scene {
         WindowGroup {
-            RootView()
+            RootView(store: .init(initialState: Root.State(), reducer: { Root() }))
         }
     }
 }

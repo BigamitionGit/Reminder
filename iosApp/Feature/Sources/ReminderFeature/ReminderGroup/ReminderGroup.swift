@@ -7,6 +7,7 @@
 import ComposableArchitecture
 import Theme
 import Foundation
+import Helper
 
 @Reducer
 public struct ReminderGroup {
@@ -39,7 +40,7 @@ public struct ReminderGroup {
 
     public var body: some ReducerOf<Self> {
         BindingReducer()
-        Reduce { state, action in
+        Reduce { _, action in
             switch action {
             case .view(.onAppear):
                 return .none
@@ -53,4 +54,20 @@ public struct ReminderGroup {
             Reminder()
         }
     }
+}
+
+extension ReminderGroup.State {
+    static let mock: Self = ReminderGroup.State(
+        id: UUID(),
+        name: "AAA",
+        icon: .calendarCircleFill,
+        list: [
+            .init(id: UUID(),
+                  title: "111",
+                  date: nil,
+                  isCompleted: false),
+            .init(id: UUID(),
+                  title: "222",
+                  date: Date(),
+                  isCompleted: true)])
 }

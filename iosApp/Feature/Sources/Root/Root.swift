@@ -7,7 +7,7 @@
 
 import Foundation
 import ComposableArchitecture
-import Reminder
+import ReminderFeature
 import Helper
 import Theme
 
@@ -33,6 +33,8 @@ public struct Root {
         case path(StackActionOf<Path>)
     }
 
+    public init() {}
+
     public var body: some ReducerOf<Self> {
         Scope(state: \.reminderTop, action: \.reminderTop) {
             ReminderTop()
@@ -43,9 +45,8 @@ public struct Root {
     private var navigationReducer: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
-            case .reminderTop(.view(.groupTapped)):
-                // TODO
-                state.path.append(.group(.init(id: .init(), name: "", icon: .circle, list: [])))
+            case .reminderTop(.view(.groupTapped(let groupState))):
+                state.path.append(.group(groupState))
                 return .none
             case .path:
                 return .none
@@ -53,5 +54,6 @@ public struct Root {
                 return .none
             }
         }
+        .forEach(\.path, action: \.path)
     }
 }

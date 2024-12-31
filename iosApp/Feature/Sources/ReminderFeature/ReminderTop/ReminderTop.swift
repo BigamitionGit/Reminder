@@ -42,7 +42,8 @@ public struct ReminderTop {
             return calendar.isDateInToday(date)
         }
 
-        public init(myGroups: IdentifiedArrayOf<ReminderGroup.State> = [], filters: [Filter] = []) {
+        // TODO: デフォルト値をmock以外に変更
+        public init(myGroups: IdentifiedArrayOf<ReminderGroup.State> = .mock, filters: [Filter] = []) {
             self.myGroups = myGroups
             self.filters = filters
         }
@@ -54,7 +55,7 @@ public struct ReminderTop {
 
         public enum View {
             case onAppear
-            case groupTapped
+            case groupTapped(ReminderGroup.State)
         }
     }
 
@@ -66,9 +67,7 @@ public struct ReminderTop {
             case .view(.onAppear):
                 state.myGroups = []
                 return .none
-            case .view(.groupTapped):
-                return .none
-            case .groups:
+            case .view(.groupTapped), .groups:
                 return .none
             }
         }
@@ -79,7 +78,7 @@ public struct ReminderTop {
 }
 
 extension IdentifiedArrayOf<ReminderGroup.State> {
-  static let mock: Self = [
+  public static let mock: Self = [
     ReminderGroup.State(id: UUID(),
                         name: "AAA",
                         icon: .calendarCircleFill, list: [.init(id: UUID(),
@@ -101,17 +100,4 @@ extension IdentifiedArrayOf<ReminderGroup.State> {
                                                                    date: nil,
                                                                    isCompleted: true)])
   ]
-}
-
-extension ReminderGroup.State {
-    static let mock: Self = ReminderGroup.State(id: UUID(),
-                                                name: "AAA",
-                                                icon: .calendarCircleFill, list: [.init(id: UUID(),
-                                                                                           title: "111",
-                                                                                           date: nil,
-                                                                                           isCompleted: false),
-                                                                                     .init(id: UUID(),
-                                                                                           title: "222",
-                                                                                           date: nil,
-                                                                                           isCompleted: true)])
 }

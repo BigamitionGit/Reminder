@@ -22,5 +22,6 @@ public struct ReminderGroupView: View {
                 }
             }
         }
+        .navigationTitle(store.name)
     }
 }

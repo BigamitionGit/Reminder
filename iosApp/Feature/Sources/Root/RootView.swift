@@ -8,7 +8,7 @@
 import SwiftUI
 import SharedKit
 import ComposableArchitecture
-import Reminder
+import ReminderFeature
 import Theme
 
 public struct RootView: View {
@@ -19,6 +19,30 @@ public struct RootView: View {
     }
 
     public var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationStack(
+            path: $store.scope(
+                state: \.path,
+                action: \.path
+            )
+        ) {
+            ReminderTopView(
+                store: store.scope(
+                    state: \.reminderTop,
+                    action: \.reminderTop))
+        } destination: { store in
+            switch store.case {
+            case let .group(groupStore):
+                ReminderGroupView(store: groupStore)
+            }
+        }
     }
+}
+
+#Preview {
+    RootView(
+        store: .init(
+            initialState: Root.State(),
+            reducer: { Root() }
+        )
+    )
 }

@@ -18,12 +18,14 @@ public struct ReminderGroup {
         public var name: String
         public var icon: SFSymbol
         public var list: IdentifiedArrayOf<Reminder.State>
+        public var focus: Reminder.State.ID?
 
-        public init(id: Self.ID, name: String, icon: SFSymbol, list: IdentifiedArrayOf<Reminder.State>) {
+        public init(id: Self.ID, name: String, icon: SFSymbol, list: IdentifiedArrayOf<Reminder.State>, focus: Reminder.State.ID? = nil) {
             self.id = id
             self.name = name
             self.icon = icon
             self.list = list
+            self.focus = focus
         }
     }
 
@@ -45,9 +47,7 @@ public struct ReminderGroup {
             switch action {
             case .view(.onAppear):
                 return .none
-            case .binding:
-                return .none
-            case .list:
+            case .binding, .list:
                 return .none
             }
         }

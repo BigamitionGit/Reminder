@@ -7,12 +7,16 @@
 import SwiftUI
 import ComposableArchitecture
 import Helper
+import Tagged
+import Theme
 
 public struct ReminderView: View {
     @Bindable private var store: StoreOf<Reminder>
+    private var focus: FocusState<Reminder.State.ID?>.Binding
 
-    public init(store: StoreOf<Reminder>) {
+    public init(store: StoreOf<Reminder>, focus: FocusState<Reminder.State.ID?>.Binding) {
         self.store = store
+        self.focus = focus
     }
 
     public var body: some View {
@@ -22,12 +26,16 @@ public struct ReminderView: View {
             }
             .toggleStyle(CheckToggleStyle())
             VStack(alignment: .leading) {
-                Text(store.title)
+                TextEditor(text: $store.title)
+                    .focused(focus, equals: store.id)
                 if let date = store.date {
                     Text(date, format: .numericShortened)
                 }
             }
             Spacer()
+            if focus.wrappedValue == store.id {
+                Image(systemSymbol: .infoCircle)
+            }
         }
     }
 }

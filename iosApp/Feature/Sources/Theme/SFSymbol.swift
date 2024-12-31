@@ -15,6 +15,7 @@ public enum SFSymbol: String {
     case calendarCircleFill = "calendar.circle.fill"
     case trayCircleFill = "tray.circle.fill"
     case checkmarkCircleFill = "checkmark.circle.fill"
+    case infoCircle = "info.circle"
 }
 
 public extension Image {

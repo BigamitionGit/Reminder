@@ -26,13 +26,13 @@ public struct ReminderTop {
             return filters.map { filter -> ReminderGroup.State in
                 switch filter {
                 case .today:
-                    return .init(id: UUID(), name: "Today", icon: .clockFill, list: allReminder.filter { $0.date.map(isToday) ?? false }.toIdentifiedArray())
+                    return .init(id: .init(UUID()), name: "Today", icon: .clockFill, list: allReminder.filter { $0.date.map(isToday) ?? false }.toIdentifiedArray())
                 case .hasDate:
-                    return .init(id: UUID(), name: "Scheduled", icon: .calendarCircleFill, list: allReminder.filter(\.date != nil).toIdentifiedArray())
+                    return .init(id: .init(UUID()), name: "Scheduled", icon: .calendarCircleFill, list: allReminder.filter(\.date != nil).toIdentifiedArray())
                 case .all:
-                    return .init(id: UUID(), name: "All", icon: .trayCircleFill, list: allReminder.filter(!\.isCompleted).toIdentifiedArray())
+                    return .init(id: .init(UUID()), name: "All", icon: .trayCircleFill, list: allReminder.filter(!\.isCompleted).toIdentifiedArray())
                 case .completed:
-                    return .init(id: UUID(), name: "Completed", icon: .checkmarkCircleFill, list: allReminder.filter(\.isCompleted).toIdentifiedArray())
+                    return .init(id: .init(UUID()), name: "Completed", icon: .checkmarkCircleFill, list: allReminder.filter(\.isCompleted).toIdentifiedArray())
                 }
             }.toIdentifiedArray()
         }
@@ -79,23 +79,23 @@ public struct ReminderTop {
 
 extension IdentifiedArrayOf<ReminderGroup.State> {
   public static let mock: Self = [
-    ReminderGroup.State(id: UUID(),
+    ReminderGroup.State(id: .init(UUID()),
                         name: "AAA",
-                        icon: .calendarCircleFill, list: [.init(id: UUID(),
+                        icon: .calendarCircleFill, list: [.init(id: .init(UUID()),
                                                                    title: "111",
                                                                    date: nil,
                                                                    isCompleted: false),
-                                                             .init(id: UUID(),
+                                                             .init(id: .init(UUID()),
                                                                    title: "222",
                                                                    date: nil,
                                                                    isCompleted: true)]),
-    ReminderGroup.State(id: UUID(),
+    ReminderGroup.State(id: .init(UUID()),
                         name: "BBB",
-                        icon: .checkmarkCircleFill, list: [.init(id: UUID(),
+                        icon: .checkmarkCircleFill, list: [.init(id: .init(UUID()),
                                                                    title: "111",
                                                                    date: nil,
                                                                    isCompleted: false),
-                                                             .init(id: UUID(),
+                                                             .init(id: .init(UUID()),
                                                                    title: "222",
                                                                    date: nil,
                                                                    isCompleted: true)])

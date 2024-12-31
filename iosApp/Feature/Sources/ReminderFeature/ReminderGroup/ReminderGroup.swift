@@ -8,17 +8,18 @@ import ComposableArchitecture
 import Theme
 import Foundation
 import Helper
+import Tagged
 
 @Reducer
 public struct ReminderGroup {
     @ObservableState
     public struct State: Equatable, Identifiable {
-        public let id: UUID
+        public let id: Tagged<Self, UUID>
         public var name: String
         public var icon: SFSymbol
         public var list: IdentifiedArrayOf<Reminder.State>
 
-        public init(id: UUID, name: String, icon: SFSymbol, list: IdentifiedArrayOf<Reminder.State>) {
+        public init(id: Self.ID, name: String, icon: SFSymbol, list: IdentifiedArrayOf<Reminder.State>) {
             self.id = id
             self.name = name
             self.icon = icon
@@ -58,15 +59,15 @@ public struct ReminderGroup {
 
 extension ReminderGroup.State {
     static let mock: Self = ReminderGroup.State(
-        id: UUID(),
+        id: .init(UUID()),
         name: "AAA",
         icon: .calendarCircleFill,
         list: [
-            .init(id: UUID(),
+            .init(id: .init(UUID()),
                   title: "111",
                   date: nil,
                   isCompleted: false),
-            .init(id: UUID(),
+            .init(id: .init(UUID()),
                   title: "222",
                   date: Date(),
                   isCompleted: true)])

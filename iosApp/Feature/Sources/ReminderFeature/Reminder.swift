@@ -5,18 +5,19 @@
 //  Created by 細田大志 on 2024/12/27.
 //
 import ComposableArchitecture
+import Tagged
 import Foundation
 
 @Reducer
 public struct Reminder {
     @ObservableState
     public struct State: Equatable, Identifiable {
-        public let id: UUID
+        public let id: Tagged<Self, UUID>
         public var title: String
         public var date: Date?
         public var isCompleted: Bool
 
-        public init(id: UUID, title: String, date: Date?, isCompleted: Bool) {
+        public init(id: Self.ID, title: String, date: Date?, isCompleted: Bool) {
             self.id = id
             self.title = title
             self.date = date

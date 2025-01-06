@@ -17,20 +17,10 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    val frameworkBaseName = "SharedKit"
-    val xcf = XCFramework(frameworkBaseName)
-    
-    listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = frameworkBaseName
-            isStatic = false
-            xcf.add(this)
-        }
-    }
+
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
     
     sourceSets {
         

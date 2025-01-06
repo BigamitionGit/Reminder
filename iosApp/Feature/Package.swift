@@ -17,7 +17,7 @@ let package = Package(
         .package(path: "../Core")
     ],
     targets: [
-        .binaryTarget(name: "SharedKit", path: "../../composeApp/build/XCFrameworks/debug/SharedKit.xcframework"),
+        .binaryTarget(name: "SharedKit", path: "../../ios-shared/build/XCFrameworks/debug/SharedKit.xcframework"),
         .target(
             name: "Root",
             dependencies: [

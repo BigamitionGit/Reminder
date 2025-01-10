@@ -9,11 +9,12 @@ let package = Package(
     products: [
         .library(
             name: "Core",
-            targets: ["Helper"]),
+            targets: ["Helper", "Theme"]),
     ],
     dependencies: [
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "1.13.0"),
         .package(url: "https://github.com/SimplyDanny/SwiftLintPlugins", exact: "0.57.0"),
+        .package(url: "https://github.com/SwiftGen/SwiftGenPlugin", from: "6.6.2"),
         .package(url: "https://github.com/pointfreeco/swift-tagged", from: "0.10.0")
     ],
     targets: [
@@ -26,6 +27,16 @@ let package = Package(
             plugins: [
                 .lint
             ]),
+        .target(
+            name: "Theme",
+            resources: [
+                .process("Resources"),
+                .process("swiftgen.yml"),
+            ],
+            plugins: [
+                .lint,
+                .swiftGen
+            ]),
     ]
 )
 
@@ -35,5 +46,6 @@ extension Target.Dependency: @unchecked Sendable {
 }
 
 extension Target.PluginUsage: @unchecked Sendable {
+    static let swiftGen: Target.PluginUsage = .plugin(name: "SwiftGenPlugin", package: "SwiftGenPlugin")
     static let lint: Target.PluginUsage = .plugin(name: "SwiftLintBuildToolPlugin", package: "SwiftLintPlugins")
 }

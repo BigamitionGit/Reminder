@@ -31,3 +31,4 @@ dependencyResolutionManagement {
 include(":composeApp")
 include(":core")
 include(":ios-shared")
+include(":features:reminder")

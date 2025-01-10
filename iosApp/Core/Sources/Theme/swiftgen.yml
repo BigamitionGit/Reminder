@@ -4,7 +4,7 @@ output_dir: ${DERIVED_SOURCES_DIR}/
 xcassets:
   inputs: Colors.xcassets
   outputs:
-    templateName: swift5
+    templatePath: ./custom_swift6.stencil
     output: AssetColors.generated.swift
     params:
       enumName: AssetColors

@@ -28,7 +28,7 @@ public struct ReminderGroupView: View {
         .toolbar {
             if focus != nil {
                 ToolbarItem {
-                    Button("完了") {
+                    Button(String(localized: "reminder_edit_done", bundle: .module)) {
                         focus = nil
                     }
                 }

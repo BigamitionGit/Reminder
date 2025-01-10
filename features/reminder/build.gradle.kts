@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidApplication)
+    alias(libs.plugins.androidLibrary)
 }
 
 kotlin {
@@ -15,29 +15,13 @@ kotlin {
         }
     }
 
-    val frameworkBaseName = "SharedKit"
-    val xcf = XCFramework(frameworkBaseName)
-
-    listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            export(projects.composeApp)
-            export(projects.core)
-            export(projects.features.reminder)
-            baseName = frameworkBaseName
-            isStatic = false
-            xcf.add(this)
-        }
-    }
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
 
     sourceSets {
         commonMain.dependencies {
-            api(projects.composeApp)
-            api(projects.core)
-            api(projects.features.reminder)
+            //put your multiplatform dependencies here
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -46,7 +30,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.example.ios_shared"
+    namespace = "com.example.reminder"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()

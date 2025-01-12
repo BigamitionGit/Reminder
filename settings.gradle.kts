@@ -1,4 +1,4 @@
-rootProject.name = "GreetingKMP"
+rootProject.name = "Reminder"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {

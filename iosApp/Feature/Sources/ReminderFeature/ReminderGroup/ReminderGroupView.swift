@@ -16,20 +16,24 @@ public struct ReminderGroupView: View {
     }
 
     public var body: some View {
+        let _ = Self._printChanges()
         ScrollView {
             LazyVStack {
-                ForEach(store.scope(state: \.list, action: \.list)) { store in
-                    ReminderView(store: store, focus: $focus)
+                ForEach(store.scope(state: \.list, action: \.list)) { reminderStore in
+                    ReminderRow(store: reminderStore, focus: $focus)
+                }
+                if let reminderStore = store.scope(state: \.initial, action: \.addNew) {
+                    ReminderRow(store: reminderStore, focus: $focus, isNew: true)
                 }
             }
+            .bind($store.focus, to: self.$focus)
         }
-        .bind($store.focus, to: self.$focus)
         .navigationTitle(store.name)
         .toolbar {
             if focus != nil {
                 ToolbarItem {
                     Button(String(localized: "reminder_edit_done", bundle: .module)) {
-                        focus = nil
+                        store.send(.view(.editDone))
                     }
                 }
             }

@@ -48,6 +48,12 @@ public struct Root {
             case .reminderTop(.view(.groupTapped(let groupState))):
                 state.path.append(.group(groupState))
                 return .none
+            case let .path(.element(id: id, action: .group(.delegate(action)))):
+                switch action {
+                case let .update(id, list):
+                    state.reminderTop.myGroups[id: id]?.list = list
+                }
+                return .none
             case .path:
                 return .none
             default:

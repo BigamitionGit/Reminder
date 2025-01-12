@@ -16,8 +16,11 @@ public struct Reminder {
         public var title: String
         public var date: Date?
         public var isCompleted: Bool
+        public var isInvalid: Bool {
+            title.isEmpty
+        }
 
-        public init(id: Self.ID, title: String, date: Date?, isCompleted: Bool) {
+        public init(id: Self.ID = .init(UUID()), title: String = "", date: Date? = nil, isCompleted: Bool = false) {
             self.id = id
             self.title = title
             self.date = date

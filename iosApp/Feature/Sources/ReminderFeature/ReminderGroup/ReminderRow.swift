@@ -10,19 +10,25 @@ import Helper
 import Tagged
 import Theme
 
-public struct ReminderView: View {
+public struct ReminderRow: View {
     @Bindable private var store: StoreOf<Reminder>
     private var focus: FocusState<Reminder.State.ID?>.Binding
+    private let isNew: Bool
 
-    public init(store: StoreOf<Reminder>, focus: FocusState<Reminder.State.ID?>.Binding) {
+    public init(store: StoreOf<Reminder>, focus: FocusState<Reminder.State.ID?>.Binding, isNew: Bool = false) {
         self.store = store
         self.focus = focus
+        self.isNew = isNew
     }
 
     public var body: some View {
         HStack(alignment: .top) {
             Toggle(isOn: $store.isCompleted) {
-                Image(systemSymbol: store.isCompleted ? .circleCircleFill : .circle)
+                if isNew {
+                    Image(systemSymbol: .circleDotted)
+                } else {
+                    Image(systemSymbol: store.isCompleted ? .circleCircleFill : .circle)
+                }
             }
             .toggleStyle(CheckToggleStyle())
             VStack(alignment: .leading) {

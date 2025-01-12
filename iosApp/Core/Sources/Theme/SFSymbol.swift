@@ -12,6 +12,7 @@ public enum SFSymbol: String {
     case circleCircleFill = "circle.circle.fill"
     case circle = "circle"
     case clockFill = "clock.fill"
+    case circleDotted = "circle.dotted"
     case calendarCircleFill = "calendar.circle.fill"
     case trayCircleFill = "tray.circle.fill"
     case checkmarkCircleFill = "checkmark.circle.fill"

@@ -54,6 +54,11 @@ public struct ReminderGroup {
                     changeFocusEffect(id: old)
                 }
             }
+            .onChange(of: \.group) { _, new in
+                Reduce { state, _ in
+                        .send(.delegate(.update(state.group.id, new.list)))
+                }
+            }
         Reduce { state, action in
             switch action {
             case .view(.onAppear):

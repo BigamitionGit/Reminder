@@ -9,26 +9,25 @@ import ComposableArchitecture
 
 public struct ReminderGroupView: View {
     @Bindable private var store: StoreOf<ReminderGroup>
-    @FocusState private var focus: Reminder.State.ID?
+    @FocusState private var focus: ReminderModel.ID?
 
     public init(store: StoreOf<ReminderGroup>) {
         self.store = store
     }
 
     public var body: some View {
-        let _ = Self._printChanges()
         ScrollView {
             LazyVStack {
-                ForEach(store.scope(state: \.list, action: \.list)) { reminderStore in
-                    ReminderRow(store: reminderStore, focus: $focus)
+                ForEach($store.group.list, id: \.id) { $reminder in
+                    ReminderRow(store: $reminder, focus: $focus)
                 }
-                if let reminderStore = store.scope(state: \.initial, action: \.addNew) {
-                    ReminderRow(store: reminderStore, focus: $focus, isNew: true)
+                if let initialReminder = Binding($store.initial) {
+                    ReminderRow(store: initialReminder, focus: $focus, isNew: true)
                 }
             }
             .bind($store.focus, to: self.$focus)
         }
-        .navigationTitle(store.name)
+        .navigationTitle(store.group.name)
         .toolbar {
             if focus != nil {
                 ToolbarItem {

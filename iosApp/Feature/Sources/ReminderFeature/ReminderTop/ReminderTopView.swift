@@ -22,20 +22,20 @@ public struct ReminderTopView: View {
     public var body: some View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 16) {
-                ForEach(store.scope(state: \.filteredReminderGroups, action: \.groups)) { groupStore in
+                ForEach(store.filteredReminderGroups, id: \.id) { group in
                     Button {
-                        store.send(.view(.groupTapped(groupStore.state)))
+                        store.send(.view(.groupTapped(group)))
                     } label: {
-                        ReminderGroupGridRow(store: groupStore)
+                        ReminderGroupGridRow(group: group)
                     }
                 }
             }
             LazyVStack {
-                ForEach(store.scope(state: \.myGroups, action: \.groups)) { groupStore in
+                ForEach(store.myGroups, id: \.id) { group in
                     Button {
-                        store.send(.view(.groupTapped(groupStore.state)))
+                        store.send(.view(.groupTapped(group)))
                     } label: {
-                        ReminderGroupListRow(store: groupStore)
+                        ReminderGroupListRow(group: group)
                     }
                 }
             }

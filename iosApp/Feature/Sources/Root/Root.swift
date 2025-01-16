@@ -45,10 +45,10 @@ public struct Root {
     private var navigationReducer: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
-            case .reminderTop(.view(.groupTapped(let groupState))):
-                state.path.append(.group(groupState))
+            case .reminderTop(.view(.groupTapped(let group))):
+                state.path.append(.group(ReminderGroup.State(group: group)))
                 return .none
-            case let .path(.element(id: id, action: .group(.delegate(action)))):
+            case let .path(.element(id: _, action: .group(.delegate(action)))):
                 switch action {
                 case let .update(id, list):
                     state.reminderTop.myGroups[id: id]?.list = list

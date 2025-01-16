@@ -9,10 +9,10 @@ import ComposableArchitecture
 import Theme
 
 public struct ReminderGroupGridRow: View {
-    @Bindable private var store: StoreOf<ReminderGroup>
+    private var group: ReminderGroupModel
 
-    public init(store: StoreOf<ReminderGroup>) {
-        self.store = store
+    public init(group: ReminderGroupModel) {
+        self.group = group
     }
 
     public var body: some View {
@@ -21,11 +21,11 @@ public struct ReminderGroupGridRow: View {
                 .foregroundColor(AssetColors.groupBackground.swiftUIColor)
             VStack(alignment: .leading, spacing: 16) {
                 HStack {
-                    Image(systemSymbol: store.icon)
+                    Image(systemSymbol: group.icon)
                     Spacer()
-                    Text("\(store.list.count)")
+                    Text("\(group.list.count)")
                 }
-                Text(store.name)
+                Text(group.name)
                     .foregroundColor(Color.blue)
             }
             .padding()

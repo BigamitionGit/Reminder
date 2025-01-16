@@ -11,12 +11,12 @@ import Tagged
 import Theme
 
 public struct ReminderRow: View {
-    @Bindable private var store: StoreOf<Reminder>
-    private var focus: FocusState<Reminder.State.ID?>.Binding
+    @Binding private var store: ReminderModel
+    private var focus: FocusState<ReminderModel.ID?>.Binding
     private let isNew: Bool
 
-    public init(store: StoreOf<Reminder>, focus: FocusState<Reminder.State.ID?>.Binding, isNew: Bool = false) {
-        self.store = store
+    public init(store: Binding<ReminderModel>, focus: FocusState<ReminderModel.ID?>.Binding, isNew: Bool = false) {
+        self._store = store
         self.focus = focus
         self.isNew = isNew
     }

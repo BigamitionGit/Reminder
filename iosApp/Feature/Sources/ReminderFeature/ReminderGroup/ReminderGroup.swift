@@ -13,19 +13,13 @@ import Tagged
 @Reducer
 public struct ReminderGroup {
     @ObservableState
-    public struct State: Equatable, Identifiable {
-        public let id: Tagged<Self, UUID>
-        public var name: String
-        public var icon: SFSymbol
-        public var list: IdentifiedArrayOf<Reminder.State>
-        public var initial: Reminder.State?
-        public var focus: Reminder.State.ID?
+    public struct State: Equatable {
+        public var group: ReminderGroupModel
+        public var initial: ReminderModel?
+        public var focus: ReminderModel.ID?
 
-        public init(id: Self.ID, name: String, icon: SFSymbol, list: IdentifiedArrayOf<Reminder.State>, initial: Reminder.State? = nil, focus: Reminder.State.ID? = nil) {
-            self.id = id
-            self.name = name
-            self.icon = icon
-            self.list = list
+        public init(group: ReminderGroupModel, initial: ReminderModel? = .init(), focus: ReminderModel.ID? = nil) {
+            self.group = group
             self.initial = initial
             self.focus = focus
         }
@@ -35,9 +29,7 @@ public struct ReminderGroup {
         case view(View)
         case delegate(Delegate)
         case `internal`(Internal)
-        case addNew(Reminder.Action)
         case binding(BindingAction<State>)
-        case list(IdentifiedActionOf<Reminder>)
 
         public enum View {
             case onAppear
@@ -45,11 +37,11 @@ public struct ReminderGroup {
         }
 
         public enum Delegate {
-            case update(State.ID, IdentifiedArrayOf<Reminder.State>)
+            case update(ReminderGroupModel.ID, IdentifiedArrayOf<ReminderModel>)
         }
 
         public enum Internal {
-            case changefocus(Reminder.State.ID)
+            case changefocus(ReminderModel.ID)
         }
     }
 
@@ -69,40 +61,34 @@ public struct ReminderGroup {
                 return .none
             case let .internal(.changefocus(id)):
                 if let new = state.initial, !new.isInvalid, id == new.id {
-                    state.list.append(new)
+                    state.group.list.append(new)
                     state.initial = .init()
                 }
-                if let edit = state.list[id: id], edit.isInvalid {
-                    state.list.remove(id: edit.id)
+                if let edit = state.group.list[id: id], edit.isInvalid {
+                    state.group.list.remove(id: edit.id)
                 }
                 return .none
             case .view(.editDone):
                 state.focus = nil
                 return .none
-            case .binding, .list, .addNew, .delegate:
+            case .binding, .delegate:
                 return .none
             }
-        }
-        .forEach(\.list, action: \.list) {
-            Reminder()
-        }
-        .ifLet(\.initial, action: \.addNew) {
-            Reminder()
         }
         .onChange(of: \.focus) { old, _ in
             Reduce { _, _ in
                 changeFocusEffect(id: old)
             }
         }
-        .onChange(of: \.list) { _, new in
+        .onChange(of: \.group.list) { _, new in
             Reduce { state, _ in
-                    .send(.delegate(.update(state.id, new)))
+                    .send(.delegate(.update(state.group.id, new)))
             }
         }
         ._printChanges()
     }
 
-    private func changeFocusEffect(id: Reminder.State.ID?) -> Effect<Action> {
+    private func changeFocusEffect(id: ReminderModel.ID?) -> Effect<Action> {
         if let id {
             return .send(.internal(.changefocus(id)))
         } else {
@@ -112,17 +98,21 @@ public struct ReminderGroup {
 }
 
 extension ReminderGroup.State {
-    static let mock: Self = ReminderGroup.State(
-        id: .init(UUID()),
-        name: "AAA",
-        icon: .calendarCircleFill,
-        list: [
-            .init(id: .init(UUID()),
-                  title: "111",
-                  date: nil,
-                  isCompleted: false),
-            .init(id: .init(UUID()),
-                  title: "222",
-                  date: Date(),
-                  isCompleted: true)])
+    static let mock: Self = .init(
+        group: ReminderGroupModel(
+            id: .init(),
+            name: "AAA",
+            icon: .calendarCircleFill,
+            list: [
+                .init(
+                    id: .init(),
+                    title: "111",
+                    isCompleted: false),
+                .init(
+                    id: .init(),
+                    title: "222",
+                    isCompleted: true)
+            ]),
+        initial: nil,
+        focus: nil)
 }

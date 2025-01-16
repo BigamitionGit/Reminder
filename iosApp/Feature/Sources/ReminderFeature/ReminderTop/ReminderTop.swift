@@ -7,6 +7,8 @@
 import ComposableArchitecture
 import Foundation
 import Helper
+import Tagged
+import Theme
 
 public enum Filter {
     case today
@@ -19,11 +21,11 @@ public enum Filter {
 public struct ReminderTop {
     @ObservableState
     public struct State {
-        public var myGroups: IdentifiedArrayOf<ReminderGroup.State>
+        public var myGroups: IdentifiedArrayOf<ReminderGroupModel>
         var filters: [Filter]
-        public var filteredReminderGroups: IdentifiedArrayOf<ReminderGroup.State> {
+        public var filteredReminderGroups: IdentifiedArrayOf<ReminderGroupModel> {
             let allReminder = myGroups.flatMap(\.list)
-            return filters.map { filter -> ReminderGroup.State in
+            return filters.map { filter -> ReminderGroupModel in
                 switch filter {
                 case .today:
                     return .init(id: .init(UUID()), name: "Today", icon: .clockFill, list: allReminder.filter { $0.date.map(isToday) ?? false }.toIdentifiedArray())
@@ -43,7 +45,7 @@ public struct ReminderTop {
         }
 
         // TODO: デフォルト値をmock以外に変更
-        public init(myGroups: IdentifiedArrayOf<ReminderGroup.State> = .mock, filters: [Filter] = []) {
+        public init(myGroups: IdentifiedArrayOf<ReminderGroupModel> = .mock, filters: [Filter] = [.today, .all, .hasDate, .completed]) {
             self.myGroups = myGroups
             self.filters = filters
         }
@@ -51,11 +53,10 @@ public struct ReminderTop {
 
     public enum Action {
         case view(View)
-        case groups(IdentifiedActionOf<ReminderGroup>)
 
         public enum View {
             case onAppear
-            case groupTapped(ReminderGroup.State)
+            case groupTapped(ReminderGroupModel)
         }
     }
 
@@ -67,40 +68,29 @@ public struct ReminderTop {
             case .view(.onAppear):
                 state.myGroups = []
                 return .none
-            case .view(.groupTapped), .groups:
+            case .view(.groupTapped):
                 return .none
             }
-        }
-        .forEach(\.myGroups, action: \.groups) {
-            ReminderGroup()
         }
     }
 }
 
-extension IdentifiedArrayOf<ReminderGroup.State> {
+extension ReminderTop.State {
+    public static let mock: Self = .init(myGroups: .mock, filters: [.all, .today, .hasDate, .completed])
+}
+
+extension IdentifiedArrayOf<ReminderGroupModel> {
   public static let mock: Self = [
-    ReminderGroup.State(id: .init(UUID()),
-                        name: "AAA",
-                        icon: .calendarCircleFill,
-                        list: [.init(id: .init(UUID()),
-                                     title: "111",
-                                     date: nil,
-                                     isCompleted: false),
-                               .init(id: .init(UUID()),
-                                     title: "222",
-                                     date: nil,
-                                     isCompleted: true)]),
-    ReminderGroup.State(id: .init(UUID()),
-                        name: "BBB",
-                        icon: .checkmarkCircleFill,
-                        list: [.init(id: .init(UUID()),
-                                     title: "111",
-                                     date: nil,
-                                     isCompleted: false),
-                               .init(id: .init(UUID()),
-                                     title: "222",
-                                     date: nil,
-                                     isCompleted: true)],
-                        initial: .init())
+    ReminderGroupModel(id: .init(),
+                       name: "AAA",
+                       icon: .calendarCircleFill,
+                       list: [.init(), .init()]),
+    ReminderGroupModel(id: .init(),
+                       name: "AAA",
+                       icon: .calendarCircleFill,
+                       list: [.init(title: "111",
+                                    isCompleted: false),
+                              .init(title: "222",
+                                    isCompleted: true)])
   ]
 }

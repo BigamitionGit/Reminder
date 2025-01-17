@@ -1,4 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="reminder_edit_done">Done</string>
+    <string name="reminder_group_today">Today</string>
+    <string name="reminder_group_tomorrow">Tomorrow</string>
+    <string name="reminder_group_hasDate">Scheduled</string>
+    <string name="reminder_group_all">All</string>
+    <string name="reminder_group_completed">Completed</string>
+    <string name="reminder_group_pastDue">Past Due</string>
+    <string name="reminder_group_previousDays">Previous %d Days</string>
+    <string name="reminder_new">New Reminder</string>
+    <string name="reminder_myList_add">Add List</string>
+    <string name="reminder_top_edit">Edit Lists</string>
+    <string name="reminder_details">Details</string>
+    <string name="reminder_details_Done">Done</string>
+    <string name="reminder_details_Cancel">Cancel</string>
+    <string name="reminder_details_Date">Date</string>
+    <string name="reminder_details_Time">Time</string>
+    <string name="reminder_details_List">List</string>
 </resources>

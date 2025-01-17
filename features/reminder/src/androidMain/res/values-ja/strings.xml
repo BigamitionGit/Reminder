@@ -1,4 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="reminder_edit_done">完了</string>
+    <string name="reminder_group_today">今日</string>
+    <string name="reminder_group_tomorrow">明日</string>
+    <string name="reminder_group_hasDate">日次設定あり</string>
+    <string name="reminder_group_all">すべて</string>
+    <string name="reminder_group_completed">実行済み</string>
+    <string name="reminder_group_pastDue">期限切れ</string>
+    <string name="reminder_group_previousDays">Completed</string>
+    <string name="reminder_new">新規</string>
+    <string name="reminder_myList_add">リストを追加</string>
+    <string name="reminder_top_edit">リストを編集</string>
+    <string name="reminder_details">詳細</string>
+    <string name="reminder_details_Done">完了</string>
+    <string name="reminder_details_Cancel">キャンセル</string>
+    <string name="reminder_details_Date">日付</string>
+    <string name="reminder_details_Time">時刻</string>
+    <string name="reminder_details_List">リスト</string>
 </resources>

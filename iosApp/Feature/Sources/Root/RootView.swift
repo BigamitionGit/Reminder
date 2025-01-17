@@ -33,6 +33,8 @@ public struct RootView: View {
             switch store.case {
             case let .group(groupStore):
                 ReminderGroupView(store: groupStore)
+            case let .myList(myListStore):
+                ReminderMyListView(store: myListStore)
             }
         }
     }

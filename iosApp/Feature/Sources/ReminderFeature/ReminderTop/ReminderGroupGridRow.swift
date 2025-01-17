@@ -9,9 +9,9 @@ import ComposableArchitecture
 import Theme
 
 public struct ReminderGroupGridRow: View {
-    private var group: ReminderGroupModel
+    private var group: ReminderMyListModel
 
-    public init(group: ReminderGroupModel) {
+    public init(group: ReminderMyListModel) {
         self.group = group
     }
 
@@ -23,7 +23,7 @@ public struct ReminderGroupGridRow: View {
                 HStack {
                     Image(systemSymbol: group.icon)
                     Spacer()
-                    Text("\(group.list.count)")
+                    Text("\(group.reminders.count)")
                 }
                 Text(group.name)
                     .foregroundColor(Color.blue)

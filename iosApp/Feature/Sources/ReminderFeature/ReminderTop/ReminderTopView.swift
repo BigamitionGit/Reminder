@@ -31,11 +31,11 @@ public struct ReminderTopView: View {
                 }
             }
             LazyVStack {
-                ForEach(store.myGroups, id: \.id) { group in
+                ForEach(store.myLists, id: \.id) { myList in
                     Button {
-                        store.send(.view(.groupTapped(group)))
+                        store.send(.view(.myListTapped(myList)))
                     } label: {
-                        ReminderGroupListRow(group: group)
+                        ReminderGroupListRow(group: myList)
                     }
                 }
             }
@@ -45,7 +45,7 @@ public struct ReminderTopView: View {
 
 #Preview {
     ReminderTopView(
-        store: .init(initialState: ReminderTop.State(myGroups: .mock, filters: [.all, .hasDate, .today])) {
+        store: .init(initialState: ReminderTop.State(myLists: .mock, filters: [.all, .hasDate, .today])) {
             ReminderTop()
         }
     )

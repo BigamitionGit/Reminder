@@ -1,8 +1,8 @@
 //
-//  ReminderGroup.swift
+//  ReminderMyList.swift
 //  Feature
 //
-//  Created by 細田大志 on 2024/12/27.
+//  Created by 細田大志 on 2025/01/17.
 //
 import ComposableArchitecture
 import Theme
@@ -11,15 +11,15 @@ import Helper
 import Tagged
 
 @Reducer
-public struct ReminderGroup {
+public struct ReminderMyList {
     @ObservableState
     public struct State: Equatable {
-        public var group: ReminderMyListModel
+        public var myList: ReminderMyListModel
         public var initial: ReminderModel?
         public var focus: ReminderModel.ID?
 
-        public init(group: ReminderMyListModel, initial: ReminderModel? = .init(), focus: ReminderModel.ID? = nil) {
-            self.group = group
+        public init(myList: ReminderMyListModel, initial: ReminderModel? = .init(), focus: ReminderModel.ID? = nil) {
+            self.myList = myList
             self.initial = initial
             self.focus = focus
         }
@@ -54,23 +54,22 @@ public struct ReminderGroup {
                     changeFocusEffect(id: old)
                 }
             }
-            .onChange(of: \.group) { _, new in
+            .onChange(of: \.myList) { _, new in
                 Reduce { state, _ in
-                        .send(.delegate(.update(state.group.id, new.reminders)))
+                        .send(.delegate(.update(state.myList.id, new.reminders)))
                 }
             }
         Reduce { state, action in
             switch action {
             case .view(.onAppear):
-                state.initial = .init()
                 return .none
             case let .internal(.changeFocus(id)):
                 if let new = state.initial, !new.isInvalid, id == new.id {
-                    state.group.reminders.append(new)
+                    state.myList.reminders.append(new)
                     state.initial = .init()
                 }
-                if let edit = state.group.reminders[id: id], edit.isInvalid {
-                    state.group.reminders.remove(id: edit.id)
+                if let edit = state.myList.reminders[id: id], edit.isInvalid {
+                    state.myList.reminders.remove(id: edit.id)
                 }
                 return .none
             case .view(.editDone):
@@ -85,9 +84,9 @@ public struct ReminderGroup {
                 changeFocusEffect(id: old)
             }
         }
-        .onChange(of: \.group.reminders) { _, new in
+        .onChange(of: \.myList.reminders) { _, new in
             Reduce { state, _ in
-                    .send(.delegate(.update(state.group.id, new)))
+                    .send(.delegate(.update(state.myList.id, new)))
             }
         }
         ._printChanges()
@@ -102,9 +101,9 @@ public struct ReminderGroup {
     }
 }
 
-extension ReminderGroup.State {
+extension ReminderMyList.State {
     static let mock: Self = .init(
-        group: ReminderMyListModel(
+        myList: ReminderMyListModel(
             id: .init(),
             name: "AAA",
             icon: .calendarCircleFill,

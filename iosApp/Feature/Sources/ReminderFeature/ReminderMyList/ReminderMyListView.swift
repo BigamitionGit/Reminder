@@ -1,24 +1,24 @@
 //
-//  ReminderGroupView.swift
+//  ReminderMyListView.swift
 //  Feature
 //
-//  Created by 細田大志 on 2024/12/27.
+//  Created by 細田大志 on 2025/01/17.
 //
 import SwiftUI
 import ComposableArchitecture
 
-public struct ReminderGroupView: View {
-    @Bindable private var store: StoreOf<ReminderGroup>
+public struct ReminderMyListView: View {
+    @Bindable private var store: StoreOf<ReminderMyList>
     @FocusState private var focus: ReminderModel.ID?
 
-    public init(store: StoreOf<ReminderGroup>) {
+    public init(store: StoreOf<ReminderMyList>) {
         self.store = store
     }
 
     public var body: some View {
         ScrollView {
             LazyVStack {
-                ForEach($store.group.reminders, id: \.id) { $reminder in
+                ForEach($store.myList.reminders, id: \.id) { $reminder in
                     ReminderRow(store: $reminder, focus: $focus)
                 }
                 if let initialReminder = Binding($store.initial) {
@@ -27,7 +27,7 @@ public struct ReminderGroupView: View {
             }
             .bind($store.focus, to: self.$focus)
         }
-        .navigationTitle(store.group.name)
+        .navigationTitle(store.myList.name)
         .toolbar {
             if focus != nil {
                 ToolbarItem {

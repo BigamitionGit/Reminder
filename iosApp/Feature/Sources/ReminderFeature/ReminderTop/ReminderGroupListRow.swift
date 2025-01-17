@@ -9,9 +9,9 @@ import ComposableArchitecture
 import Theme
 
 public struct ReminderGroupListRow: View {
-    private var group: ReminderGroupModel
+    private var group: ReminderMyListModel
 
-    public init(group: ReminderGroupModel) {
+    public init(group: ReminderMyListModel) {
         self.group = group
     }
 
@@ -20,7 +20,7 @@ public struct ReminderGroupListRow: View {
             Image(systemSymbol: group.icon)
             Text(group.name)
             Spacer()
-            Text("\(group.list.count)")
+            Text("\(group.reminders.count)")
             Image(systemSymbol: .chevronRight)
         }
         .padding()

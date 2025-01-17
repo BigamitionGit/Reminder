@@ -16,6 +16,7 @@ public struct Root {
     @Reducer(state: .equatable)
     public enum Path {
         case group(ReminderGroup)
+        case myList(ReminderMyList)
     }
     @ObservableState
     public struct State {
@@ -48,10 +49,10 @@ public struct Root {
             case .reminderTop(.view(.groupTapped(let group))):
                 state.path.append(.group(ReminderGroup.State(group: group)))
                 return .none
-            case let .path(.element(id: _, action: .group(.delegate(action)))):
+            case let .path(.element(id: _, action: .myList(.delegate(action)))):
                 switch action {
-                case let .update(id, list):
-                    state.reminderTop.myGroups[id: id]?.list = list
+                case let .update(id, reminders):
+                    state.reminderTop.myLists[id: id]?.reminders = reminders
                 }
                 return .none
             case .path:

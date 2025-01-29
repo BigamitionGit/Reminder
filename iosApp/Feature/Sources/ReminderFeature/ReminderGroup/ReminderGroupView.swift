@@ -16,18 +16,21 @@ public struct ReminderGroupView: View {
     }
 
     public var body: some View {
-        ScrollView {
-            LazyVStack {
-                ForEach($store.group.reminders, id: \.id) { $reminder in
-                    ReminderRow(store: $reminder, focus: $focus)
-                }
-                if let initialReminder = Binding($store.initial) {
-                    ReminderRow(store: initialReminder, focus: $focus, isNew: true)
+        List {
+            ForEach($store.sections, id: \.id) { $section in
+                if let sectionName = section.name {
+                    Section(header: Text(sectionName)) {
+                        subSectionList(subSections: $section.subSections)
+                    }
+                } else {
+                    subSectionList(subSections: $section.subSections)
                 }
             }
-            .bind($store.focus, to: self.$focus)
         }
+        .listStyle(.plain)
+        .bind($store.focus, to: self.$focus)
         .navigationTitle(store.group.name)
+        .onAppear { store.send(.view(.onAppear)) }
         .toolbar {
             if focus != nil {
                 ToolbarItem {
@@ -36,6 +39,24 @@ public struct ReminderGroupView: View {
                     }
                 }
             }
+        }
+    }
+
+    private func subSectionList(subSections: Binding<[ReminderGroup.SubSection]>) -> some View {
+        ForEach(subSections, id: \.id) { $subSection in
+            if let subSectionName = subSection.name {
+                Section(header: Text(subSectionName)) {
+                    reminderList(reminders: $subSection.reminders)
+                }
+            } else {
+                reminderList(reminders: $subSection.reminders)
+            }
+        }
+    }
+
+    private func reminderList(reminders: Binding<IdentifiedArrayOf<ReminderModel>>) -> some View {
+        ForEach(reminders, id: \.id) { $reminder in
+            ReminderRow(reminder: $reminder, focus: $focus)
         }
     }
 }

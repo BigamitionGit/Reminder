@@ -43,16 +43,20 @@ public struct Root {
         navigationReducer
     }
 
+    @Dependency(\.uuid) var uuid
     private var navigationReducer: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
             case .reminderTop(.view(.groupTapped(let group))):
-                state.path.append(.group(ReminderGroup.State(group: group)))
+                state.path.append(.group(.init(group: group)))
                 return .none
-            case let .path(.element(id: _, action: .myList(.delegate(action)))):
-                switch action {
-                case let .update(id, reminders):
-                    state.reminderTop.myLists[id: id]?.reminders = reminders
+            case .reminderTop(.view(.myListTapped(let myListId))):
+                if let myList = Shared(state.reminderTop.$myLists[id: myListId]) {
+                    state.path.append(.myList(.init(
+                        myList: myList,
+                        initial: .init(
+                            id: .init(uuid()),
+                            myListId: myListId))))
                 }
                 return .none
             case .path:

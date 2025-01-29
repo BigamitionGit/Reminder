@@ -14,12 +14,12 @@ import Tagged
 public struct ReminderMyList {
     @ObservableState
     public struct State: Equatable {
-        public var myList: ReminderMyListModel
+        @Shared public var myList: ReminderMyListModel
         public var initial: ReminderModel?
         public var focus: ReminderModel.ID?
 
-        public init(myList: ReminderMyListModel, initial: ReminderModel? = .init(), focus: ReminderModel.ID? = nil) {
-            self.myList = myList
+        public init(myList: Shared<ReminderMyListModel>, initial: ReminderModel? = nil, focus: ReminderModel.ID? = nil) {
+            self._myList = myList
             self.initial = initial
             self.focus = focus
         }
@@ -27,7 +27,6 @@ public struct ReminderMyList {
 
     public enum Action: BindableAction {
         case view(View)
-        case delegate(Delegate)
         case `internal`(Internal)
         case binding(BindingAction<State>)
 
@@ -47,16 +46,12 @@ public struct ReminderMyList {
 
     public init() {}
 
+    @Dependency(\.uuid) var uuid
     public var body: some ReducerOf<Self> {
         BindingReducer()
             .onChange(of: \.focus) { old, _ in
                 Reduce { _, _ in
                     changeFocusEffect(id: old)
-                }
-            }
-            .onChange(of: \.myList) { _, new in
-                Reduce { state, _ in
-                        .send(.delegate(.update(state.myList.id, new.reminders)))
                 }
             }
         Reduce { state, action in
@@ -65,28 +60,23 @@ public struct ReminderMyList {
                 return .none
             case let .internal(.changeFocus(id)):
                 if let new = state.initial, !new.isInvalid, id == new.id {
-                    state.myList.reminders.append(new)
-                    state.initial = .init()
+                    _ = state.$myList.withLock { $0.reminders.append(new) }
+                    state.initial = .init(id: .init(uuid()), myListId: state.myList.id)
                 }
                 if let edit = state.myList.reminders[id: id], edit.isInvalid {
-                    state.myList.reminders.remove(id: edit.id)
+                    _ = state.$myList.withLock { $0.reminders.remove(id: edit.id) }
                 }
                 return .none
             case .view(.editDone):
                 state.focus = nil
                 return .none
-            case .binding, .delegate:
+            case .binding:
                 return .none
             }
         }
         .onChange(of: \.focus) { old, _ in
             Reduce { _, _ in
                 changeFocusEffect(id: old)
-            }
-        }
-        .onChange(of: \.myList.reminders) { _, new in
-            Reduce { state, _ in
-                    .send(.delegate(.update(state.myList.id, new)))
             }
         }
         ._printChanges()
@@ -102,21 +92,26 @@ public struct ReminderMyList {
 }
 
 extension ReminderMyList.State {
+    private static let myListId = ReminderMyListModel.ID()
     static let mock: Self = .init(
-        myList: ReminderMyListModel(
-            id: .init(),
-            name: "AAA",
-            icon: .calendarCircleFill,
-            reminders: [
-                .init(
-                    id: .init(),
-                    title: "111",
-                    isCompleted: false),
-                .init(
-                    id: .init(),
-                    title: "222",
-                    isCompleted: true)
-            ]),
+        myList: Shared(
+            value: ReminderMyListModel(
+                id: myListId,
+                name: "AAA",
+                icon: .calendarCircleFill,
+                reminders: [
+                    .init(
+                        id: .init(),
+                        myListId: myListId,
+                        title: "111",
+                        isCompleted: false),
+                    .init(
+                        id: .init(),
+                        myListId: myListId,
+                        title: "222",
+                        isCompleted: true)
+                ])
+        ),
         initial: nil,
         focus: nil)
 }

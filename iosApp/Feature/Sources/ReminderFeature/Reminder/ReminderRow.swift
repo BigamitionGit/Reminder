@@ -11,35 +11,35 @@ import Tagged
 import Theme
 
 public struct ReminderRow: View {
-    @Binding private var store: ReminderModel
+    @Binding private var reminder: ReminderModel
     private var focus: FocusState<ReminderModel.ID?>.Binding
     private let isNew: Bool
 
-    public init(store: Binding<ReminderModel>, focus: FocusState<ReminderModel.ID?>.Binding, isNew: Bool = false) {
-        self._store = store
+    public init(reminder: Binding<ReminderModel>, focus: FocusState<ReminderModel.ID?>.Binding, isNew: Bool = false) {
+        self._reminder = reminder
         self.focus = focus
         self.isNew = isNew
     }
 
     public var body: some View {
         HStack(alignment: .top) {
-            Toggle(isOn: $store.isCompleted) {
+            Toggle(isOn: $reminder.isCompleted) {
                 if isNew {
                     Image(systemSymbol: .circleDotted)
                 } else {
-                    Image(systemSymbol: store.isCompleted ? .circleCircleFill : .circle)
+                    Image(systemSymbol: reminder.isCompleted ? .circleCircleFill : .circle)
                 }
             }
             .toggleStyle(CheckToggleStyle())
             VStack(alignment: .leading) {
-                TextEditor(text: $store.title)
-                    .focused(focus, equals: store.id)
-                if let date = store.date {
+                TextEditor(text: $reminder.title)
+                    .focused(focus, equals: reminder.id)
+                if let date = reminder.date {
                     Text(date, format: .numericShortened)
                 }
             }
             Spacer()
-            if focus.wrappedValue == store.id {
+            if focus.wrappedValue == reminder.id {
                 Image(systemSymbol: .infoCircle)
             }
         }
@@ -61,11 +61,11 @@ struct CheckToggleStyle: ToggleStyle {
     }
 }
 
-#Preview {
-    ReminderGroupView(
-        store: .init(
-            initialState: .mock,
-            reducer: { ReminderGroup() }
-        )
-    )
-}
+//#Preview {
+//    ReminderGroupView(
+//        store: .init(
+//            initialState: .mock,
+//            reducer: { ReminderGroup() }
+//        )
+//    )
+//}

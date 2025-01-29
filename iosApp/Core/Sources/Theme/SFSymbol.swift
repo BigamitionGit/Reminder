@@ -7,7 +7,7 @@
 import SwiftUI
 import UIKit
 
-public enum SFSymbol: String {
+public enum SFSymbol: String, Codable {
     case chevronRight = "chevron.right"
     case circleCircleFill = "circle.circle.fill"
     case circle = "circle"

@@ -19,10 +19,10 @@ public struct ReminderMyListView: View {
         ScrollView {
             LazyVStack {
                 ForEach($store.myList.reminders, id: \.id) { $reminder in
-                    ReminderRow(store: $reminder, focus: $focus)
+                    ReminderRow(reminder: $reminder, focus: $focus)
                 }
                 if let initialReminder = Binding($store.initial) {
-                    ReminderRow(store: initialReminder, focus: $focus, isNew: true)
+                    ReminderRow(reminder: initialReminder, focus: $focus, isNew: true)
                 }
             }
             .bind($store.focus, to: self.$focus)

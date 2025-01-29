@@ -10,33 +10,26 @@ import Helper
 import Tagged
 import Theme
 
-public enum Filter {
-    case today
-    case hasDate
-    case all
-    case completed
-}
-
 @Reducer
 public struct ReminderTop {
     @ObservableState
     public struct State {
-        public var myLists: IdentifiedArrayOf<ReminderMyListModel>
-        var filters: [Filter]
-        public var filteredReminderGroups: IdentifiedArrayOf<ReminderMyListModel> {
+        @Shared(.myLists) public var myLists
+        public var groups: IdentifiedArrayOf<ReminderGroupModel>
+        public var groupsWithCount: [(ReminderGroupModel, Int)] {
             let allReminder = myLists.flatMap(\.reminders)
-            return filters.map { filter -> ReminderMyListModel in
-                switch filter {
+            return groups.map { group -> (ReminderGroupModel, Int) in
+                switch group {
                 case .today:
-                    return .init(id: .init(UUID()), name: "Today", icon: .clockFill, reminders: allReminder.filter { $0.date.map(isToday) ?? false }.toIdentifiedArray())
+                    return (group, allReminder.filter { $0.date.map(isToday) ?? false }.count)
                 case .hasDate:
-                    return .init(id: .init(UUID()), name: "Scheduled", icon: .calendarCircleFill, reminders: allReminder.filter(\.date != nil).toIdentifiedArray())
+                    return (group, allReminder.filter(\.date != nil).count)
                 case .all:
-                    return .init(id: .init(UUID()), name: "All", icon: .trayCircleFill, reminders: allReminder.filter(!\.isCompleted).toIdentifiedArray())
+                    return (group, allReminder.filter(!\.isCompleted).count)
                 case .completed:
-                    return .init(id: .init(UUID()), name: "Completed", icon: .checkmarkCircleFill, reminders: allReminder.filter(\.isCompleted).toIdentifiedArray())
+                    return (group, allReminder.filter(\.isCompleted).count)
                 }
-            }.toIdentifiedArray()
+            }
         }
 
         private func isToday(date: Date) -> Bool {
@@ -44,10 +37,8 @@ public struct ReminderTop {
             return calendar.isDateInToday(date)
         }
 
-        // TODO: デフォルト値をmock以外に変更
-        public init(myLists: IdentifiedArrayOf<ReminderMyListModel> = .mock, filters: [Filter] = [.today, .all, .hasDate, .completed]) {
-            self.myLists = myLists
-            self.filters = filters
+        public init(groups: IdentifiedArrayOf<ReminderGroupModel> = [.today, .all, .hasDate, .completed]) {
+            self.groups = groups
         }
     }
 
@@ -56,8 +47,8 @@ public struct ReminderTop {
 
         public enum View {
             case onAppear
-            case groupTapped(ReminderMyListModel)
-            case myListTapped(ReminderMyListModel)
+            case groupTapped(ReminderGroupModel)
+            case myListTapped(ReminderMyListModel.ID)
         }
     }
 
@@ -70,25 +61,32 @@ public struct ReminderTop {
                 return .none
             }
         }
+        ._printChanges()
     }
 }
 
 extension ReminderTop.State {
-    public static let mock: Self = .init(myLists: .mock, filters: [.all, .today, .hasDate, .completed])
+    public static let mock: Self = .init(groups: [.all, .today, .hasDate, .completed])
 }
 
 extension IdentifiedArrayOf<ReminderMyListModel> {
+    private static let myListIds: [ReminderMyListModel.ID] = [.init(), .init()]
   public static let mock: Self = [
-    ReminderMyListModel(id: .init(),
-                       name: "AAA",
-                       icon: .calendarCircleFill,
-                        reminders: [.init(), .init()]),
-    ReminderMyListModel(id: .init(),
-                       name: "AAA",
-                       icon: .calendarCircleFill,
-                        reminders: [.init(title: "111",
-                                    isCompleted: false),
-                              .init(title: "222",
-                                    isCompleted: true)])
+    ReminderMyListModel(
+        id: myListIds[0],
+        name: "AAA",
+        icon: .calendarCircleFill,
+        reminders: [
+            .init(id: .init(), myListId: myListIds[0]),
+            .init(id: .init(), myListId: myListIds[0])]),
+    ReminderMyListModel(
+        id: myListIds[1],
+        name: "AAA",
+        icon: .calendarCircleFill,
+        reminders: [
+            .init(id: .init(), myListId: myListIds[1], title: "111",
+                  isCompleted: false),
+            .init(id: .init(), myListId: myListIds[1], title: "222",
+                  isCompleted: true)])
   ]
 }

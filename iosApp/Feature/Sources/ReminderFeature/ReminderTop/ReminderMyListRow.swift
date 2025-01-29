@@ -8,19 +8,19 @@ import SwiftUI
 import ComposableArchitecture
 import Theme
 
-public struct ReminderGroupListRow: View {
-    private var group: ReminderMyListModel
+public struct ReminderMyListRow: View {
+    private var myList: ReminderMyListModel
 
-    public init(group: ReminderMyListModel) {
-        self.group = group
+    public init(myList: ReminderMyListModel) {
+        self.myList = myList
     }
 
     public var body: some View {
         HStack {
-            Image(systemSymbol: group.icon)
-            Text(group.name)
+            Image(systemSymbol: myList.icon)
+            Text(myList.name)
             Spacer()
-            Text("\(group.reminders.count)")
+            Text("\(myList.reminders.count)")
             Image(systemSymbol: .chevronRight)
         }
         .padding()

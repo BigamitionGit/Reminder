@@ -23,6 +23,14 @@ public struct ReminderMyList {
             self.initial = initial
             self.focus = focus
         }
+
+        public init?(myListId: ReminderMyListModel.ID, initial: ReminderModel? = nil, focus: ReminderModel.ID? = nil) {
+            @Shared(.myLists) var myLists
+            guard let my = Shared($myLists.myLists[id: myListId]) else { return nil }
+            self._myList = my
+            self.initial = initial
+            self.focus = focus
+        }
     }
 
     public enum Action: BindableAction {
@@ -33,6 +41,7 @@ public struct ReminderMyList {
         public enum View {
             case onAppear
             case editDone
+            case deleteReminders(IndexSet)
         }
 
         public enum Delegate {
@@ -70,6 +79,9 @@ public struct ReminderMyList {
             case .view(.editDone):
                 state.focus = nil
                 return .none
+            case let .view(.deleteReminders(indices)):
+                state.$myList.withLock { $0.reminders.remove(atOffsets: indices) }
+                return .none
             case .binding:
                 return .none
             }
@@ -95,23 +107,7 @@ extension ReminderMyList.State {
     private static let myListId = ReminderMyListModel.ID()
     static let mock: Self = .init(
         myList: Shared(
-            value: ReminderMyListModel(
-                id: myListId,
-                name: "AAA",
-                icon: .calendarCircleFill,
-                reminders: [
-                    .init(
-                        id: .init(),
-                        myListId: myListId,
-                        title: "111",
-                        isCompleted: false),
-                    .init(
-                        id: .init(),
-                        myListId: myListId,
-                        title: "222",
-                        isCompleted: true)
-                ])
-        ),
+            value: .mock),
         initial: nil,
         focus: nil)
 }

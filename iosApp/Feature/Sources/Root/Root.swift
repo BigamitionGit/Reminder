@@ -51,12 +51,12 @@ public struct Root {
                 state.path.append(.group(.init(group: group)))
                 return .none
             case .reminderTop(.view(.myListTapped(let myListId))):
-                if let myList = Shared(state.reminderTop.$myLists[id: myListId]) {
-                    state.path.append(.myList(.init(
-                        myList: myList,
-                        initial: .init(
-                            id: .init(uuid()),
-                            myListId: myListId))))
+                if let myList = ReminderMyList.State(
+                    myListId: myListId,
+                    initial: .init(
+                        id: .init(uuid()),
+                        myListId: myListId)) {
+                    state.path.append(.myList(myList))
                 }
                 return .none
             case .path:

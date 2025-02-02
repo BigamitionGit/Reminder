@@ -16,17 +16,18 @@ public struct ReminderMyListView: View {
     }
 
     public var body: some View {
-        ScrollView {
-            LazyVStack {
-                ForEach($store.myList.reminders, id: \.id) { $reminder in
-                    ReminderRow(reminder: $reminder, focus: $focus)
-                }
-                if let initialReminder = Binding($store.initial) {
-                    ReminderRow(reminder: initialReminder, focus: $focus, isNew: true)
-                }
+        List {
+            ForEach($store.myList.reminders, id: \.id) { $reminder in
+                ReminderRow(reminder: $reminder, focus: $focus)
             }
-            .bind($store.focus, to: self.$focus)
+            .onDelete { indices in
+                store.send(.view(.deleteReminders(indices)))
+            }
+            if let initialReminder = Binding($store.initial) {
+                ReminderRow(reminder: initialReminder, focus: $focus, isNew: true)
+            }
         }
+        .bind($store.focus, to: self.$focus)
         .navigationTitle(store.myList.name)
         .toolbar {
             if focus != nil {

@@ -14,10 +14,10 @@ import Theme
 public struct ReminderTop {
     @ObservableState
     public struct State {
-        @Shared(.myLists) public var myLists
+        @Shared(.myLists) public var model
         public var groups: IdentifiedArrayOf<ReminderGroupModel>
         public var groupsWithCount: [(ReminderGroupModel, Int)] {
-            let allReminder = myLists.flatMap(\.reminders)
+            let allReminder = model.myLists.flatMap(\.reminders)
             return groups.map { group -> (ReminderGroupModel, Int) in
                 switch group {
                 case .today:

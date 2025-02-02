@@ -31,7 +31,7 @@ public struct ReminderTopView: View {
                 }
             }
             LazyVStack {
-                ForEach(store.myLists, id: \.id) { myList in
+                ForEach(store.model.myLists, id: \.id) { myList in
                     Button {
                         store.send(.view(.myListTapped(myList.id)))
                     } label: {

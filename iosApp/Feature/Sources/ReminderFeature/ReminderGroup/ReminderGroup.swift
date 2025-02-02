@@ -27,7 +27,7 @@ public struct ReminderGroup {
     @ObservableState
     public struct State: Equatable {
         public let group: ReminderGroupModel
-        @Shared(.myLists) var myLists: IdentifiedArrayOf<ReminderMyListModel>
+        @Shared(.myLists) var model
         public var focus: ReminderModel.ID?
         public var sections: [Section] = []
 
@@ -48,8 +48,8 @@ public struct ReminderGroup {
         }
 
         public enum Internal {
-            case reminderUpdated(ReminderModel)
             case myListsUpdated(IdentifiedArrayOf<ReminderMyListModel>)
+            case changeFocus(ReminderModel.ID)
         }
     }
 
@@ -58,22 +58,22 @@ public struct ReminderGroup {
     public var body: some ReducerOf<Self> {
         BindingReducer()
             .onChange(of: \.focus) { old, _ in
-                Reduce { state, _ in
-                    reminderUpdatedEffect(id: old, myLists: state.myLists)
+                Reduce { _, _ in
+                    changeFocusEffect(id: old)
                 }
             }
         Reduce { state, action in
             switch action {
             case .view(.onAppear):
                 return .publisher {
-                    state.$myLists.publisher.map { Action.internal(.myListsUpdated($0)) }
+                    state.$model.myLists.publisher.map { Action.internal(.myListsUpdated($0)) }
                 }
             case let .internal(.myListsUpdated(myLists)):
                 state.sections = convert(group: state.group, myLists: myLists)
                 return .none
-            case let .internal(.reminderUpdated(reminder)):
-                if reminder.isInvalid {
-                    _ = state.$myLists.withLock { $0[id: reminder.myListId]?.reminders.remove(id: reminder.id) }
+            case let .internal(.changeFocus(id)):
+                if let edit = state.model.myLists.flatMap(\.reminders).first(where: \.id == id), edit.isInvalid {
+                    _ = state.$model.withLock { $0.myLists[id: edit.myListId]?.reminders.remove(id: edit.id) }
                 }
                 return .none
             case .view(.editDone):
@@ -84,8 +84,8 @@ public struct ReminderGroup {
             }
         }
         .onChange(of: \.focus) { old, _ in
-            Reduce { state, _ in
-                reminderUpdatedEffect(id: old, myLists: state.myLists)
+            Reduce { _, _ in
+                changeFocusEffect(id: old)
             }
         }
         ._printChanges()
@@ -127,19 +127,11 @@ public struct ReminderGroup {
         return calendar.isDateInToday(date)
     }
 
-    private func reminderUpdatedEffect(id: ReminderModel.ID?, myLists: IdentifiedArrayOf<ReminderMyListModel>) -> Effect<Action> {
-        if let id, let reminder = myLists.flatMap(\.reminders).first(where: \.id == id) {
-            return .send(.internal(.reminderUpdated(reminder)))
+    private func changeFocusEffect(id: ReminderModel.ID?) -> Effect<Action> {
+        if let id {
+            return .send(.internal(.changeFocus(id)))
         } else {
             return .none
         }
     }
 }
-
-//extension ReminderGroup.State {
-//    static let mock: Self = .init(
-//        group: .all,
-//        myLists: .mock,
-//        initial: nil,
-//        focus: nil)
-//}

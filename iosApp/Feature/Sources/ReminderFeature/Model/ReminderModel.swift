@@ -18,6 +18,16 @@ public struct ReminderModel: Equatable, Identifiable, Codable {
     public var isInvalid: Bool {
         title.isEmpty
     }
+    public var isToday: Bool {
+        guard let date else { return false }
+        let calendar = Calendar.current
+        return calendar.isDateInToday(date)
+    }
+    public var isPastDue: Bool {
+        guard let date else { return false }
+        return date < Date()
+    }
+
     public init(id: Tagged<Self, UUID>, myListId: ReminderMyListModel.ID, title: String = "", date: Date? = nil, isCompleted: Bool = false) {
         self.id = id
         self.myListId = myListId

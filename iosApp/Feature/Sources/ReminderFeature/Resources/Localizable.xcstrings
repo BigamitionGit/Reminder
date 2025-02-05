@@ -132,7 +132,24 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Completed"
+            "value": "過去 %d 日間"
+          }
+        }
+      }
+    },
+    "reminder_group_other": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Other"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "その他"
           }
         }
       }

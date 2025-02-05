@@ -7,7 +7,8 @@
     <string name="reminder_group_all">すべて</string>
     <string name="reminder_group_completed">実行済み</string>
     <string name="reminder_group_pastDue">期限切れ</string>
-    <string name="reminder_group_previousDays">Completed</string>
+    <string name="reminder_group_previousDays">過去 %d 日間</string>
+    <string name="reminder_group_other">その他</string>
     <string name="reminder_new">新規</string>
     <string name="reminder_myList_add">リストを追加</string>
     <string name="reminder_top_edit">リストを編集</string>

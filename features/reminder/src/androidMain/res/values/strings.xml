@@ -8,6 +8,7 @@
     <string name="reminder_group_completed">Completed</string>
     <string name="reminder_group_pastDue">Past Due</string>
     <string name="reminder_group_previousDays">Previous %d Days</string>
+    <string name="reminder_group_other">Other</string>
     <string name="reminder_new">New Reminder</string>
     <string name="reminder_myList_add">Add List</string>
     <string name="reminder_top_edit">Edit Lists</string>

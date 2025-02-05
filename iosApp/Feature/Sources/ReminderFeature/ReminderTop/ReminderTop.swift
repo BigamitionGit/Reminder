@@ -21,20 +21,37 @@ public struct ReminderTop {
             return groups.map { group -> (ReminderGroupModel, Int) in
                 switch group {
                 case .today:
-                    return (group, allReminder.filter { $0.date.map(isToday) ?? false }.count)
+                    return (
+                        group,
+                        allReminder
+                            .filter(!\.isCompleted)
+                            .filter(\.isToday)
+                            .count
+                    )
                 case .hasDate:
-                    return (group, allReminder.filter(\.date != nil).count)
+                    return (
+                        group,
+                        allReminder
+                            .filter(!\.isCompleted)
+                            .filter(\.date != nil)
+                            .count
+                    )
                 case .all:
-                    return (group, allReminder.filter(!\.isCompleted).count)
+                    return (
+                        group,
+                        allReminder
+                            .filter(!\.isCompleted)
+                            .count
+                    )
                 case .completed:
-                    return (group, allReminder.filter(\.isCompleted).count)
+                    return (
+                        group,
+                        allReminder
+                            .filter(\.isCompleted)
+                            .count
+                    )
                 }
             }
-        }
-
-        private func isToday(date: Date) -> Bool {
-            let calendar = Calendar.current
-            return calendar.isDateInToday(date)
         }
 
         public init(groups: IdentifiedArrayOf<ReminderGroupModel> = [.today, .all, .hasDate, .completed]) {
@@ -55,7 +72,7 @@ public struct ReminderTop {
     public init() {}
 
     public var body: some ReducerOf<Self> {
-        Reduce { state, action in
+        Reduce { _, action in
             switch action {
             case .view(.onAppear), .view(.groupTapped), .view(.myListTapped):
                 return .none

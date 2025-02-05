@@ -100,7 +100,8 @@ public struct ReminderGroup {
                     subSections: [
                         SubSection(
                             name: nil,
-                            reminders: myList.reminders)
+                            reminders: myList.reminders
+                                .filter(!\.isCompleted))
                     ]
                 )
             }
@@ -111,20 +112,60 @@ public struct ReminderGroup {
                     name: nil,
                     reminders: myLists
                         .flatMap(\.reminders)
-                        .filter { $0.date.map(isToday) ?? false }
+                        .filter(!\.isCompleted)
+                        .filter(\.isToday)
                         .toIdentifiedArray())
                 ])
             ]
         case .hasDate:
-            return []
+            let scheduledReminders = myLists
+                .flatMap(\.reminders)
+                .filter(!\.isCompleted)
+                .filter(\.date != nil)
+            let subSectionDateFormat = Date.FormatStyle.dateTime.year().month().week().day()
+            func updateSuSections(subSections: inout [SubSection], reminder: ReminderModel) {
+                guard let date = reminder.date else { return }
+                let name = date.formatted(subSectionDateFormat)
+                if let index = subSections.firstIndex(where: \.name == name) {
+                    subSections[index].reminders.append(reminder)
+                } else {
+                    subSections.append(SubSection(name: name, reminders: [reminder]))
+                }
+            }
+            let pastDueReminders = scheduledReminders.filter(\.isPastDue)
+            let pastDueSection = Section(name: String(localized: "reminder_group_pastDue", bundle: .module),
+                                         subSections: pastDueReminders.reduce(into: [SubSection](), updateSuSections))
+            let todayReminders = scheduledReminders.filter(\.isToday)
+            let todaySection = Section(
+                name: String(localized: "reminder_group_today", bundle: .module),
+                subSections: [SubSection(
+                    name: nil,
+                    reminders: todayReminders.toIdentifiedArray())])
+            let calendar = Calendar.current
+            let next12MonthsSection = calendar.getMonths(
+                from: Date(),
+                range: 0..<12)
+                .map { month in
+                    let monthReminders = scheduledReminders.filter { reminder in
+                        guard let date = reminder.date else { return false }
+                        return calendar.isSameMonth(date1: date, date2: month)
+                    }
+                    return Section(name: month.formatted(.dateTime.month()),
+                            subSections: monthReminders.reduce(into: [SubSection](), updateSuSections))
+                }
+            return [pastDueSection] + [todaySection] + next12MonthsSection
         case .completed:
-            return []
+            return [Section(
+                name: nil,
+                subSections: [SubSection(
+                    name: nil,
+                    reminders: myLists
+                        .flatMap(\.reminders)
+                        .filter(\.isCompleted)
+                        .toIdentifiedArray())
+                ])
+            ]
         }
-    }
-
-    private func isToday(date: Date) -> Bool {
-        let calendar = Calendar.current
-        return calendar.isDateInToday(date)
     }
 
     private func changeFocusEffect(id: ReminderModel.ID?) -> Effect<Action> {

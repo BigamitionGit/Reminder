@@ -9,6 +9,7 @@ import ComposableArchitecture
 import Foundation
 import Theme
 
+
 public enum ReminderGroupModel: Equatable, Identifiable {
     case today
     case hasDate
@@ -41,6 +42,19 @@ public enum ReminderGroupModel: Equatable, Identifiable {
                 .trayCircleFill
         case .completed:
                 .checkmarkCircleFill
+        }
+    }
+
+    public func themeColor() -> ColorAsset {
+        switch self {
+        case .today:
+            AssetColors.todayGroupThemeColor
+        case .hasDate:
+            AssetColors.scheduledGroupThemeColor
+        case .all:
+            AssetColors.allGroupThemeColor
+        case .completed:
+            AssetColors.completedGroupThemeColor
         }
     }
 }

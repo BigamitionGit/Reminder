@@ -6,6 +6,7 @@
 //
 import SwiftUI
 import ComposableArchitecture
+import Theme
 
 public struct ReminderMyListView: View {
     @Bindable private var store: StoreOf<ReminderMyList>
@@ -28,7 +29,9 @@ public struct ReminderMyListView: View {
             }
         }
         .bind($store.focus, to: self.$focus)
+        .background(AssetColors.baseBackground.swiftUIColor)
         .navigationTitle(store.myList.name)
+        .navigationBarTitleDisplayMode(.large)
         .toolbar {
             if focus != nil {
                 ToolbarItem {

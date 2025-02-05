@@ -6,6 +6,7 @@
 //
 import SwiftUI
 import ComposableArchitecture
+import Theme
 
 public struct ReminderGroupView: View {
     @Bindable private var store: StoreOf<ReminderGroup>
@@ -19,7 +20,7 @@ public struct ReminderGroupView: View {
         List {
             ForEach($store.sections, id: \.id) { $section in
                 if let sectionName = section.name {
-                    Section(header: Text(sectionName)) {
+                    Section(header: Text(sectionName).foregroundColor(AssetColors.groupSectionName.swiftUIColor)) {
                         subSectionList(subSections: $section.subSections)
                     }
                 } else {
@@ -27,9 +28,11 @@ public struct ReminderGroupView: View {
                 }
             }
         }
+        .background(AssetColors.baseBackground.swiftUIColor)
         .listStyle(.plain)
         .bind($store.focus, to: self.$focus)
         .navigationTitle(store.group.name)
+        .navigationBarTitleDisplayMode(.large)
         .onAppear { store.send(.view(.onAppear)) }
         .toolbar {
             if focus != nil {
@@ -45,7 +48,7 @@ public struct ReminderGroupView: View {
     private func subSectionList(subSections: Binding<[ReminderGroup.SubSection]>) -> some View {
         ForEach(subSections, id: \.id) { $subSection in
             if let subSectionName = subSection.name {
-                Section(header: Text(subSectionName)) {
+                Section(header: Text(subSectionName).foregroundColor(AssetColors.groupSubSectionName.swiftUIColor)) {
                     reminderList(reminders: $subSection.reminders)
                 }
             } else {

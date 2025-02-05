@@ -6,6 +6,7 @@
 //
 import SwiftUI
 import ComposableArchitecture
+import Theme
 
 public struct ReminderTopView: View {
     @Bindable private var store: StoreOf<ReminderTop>
@@ -40,6 +41,7 @@ public struct ReminderTopView: View {
                 }
             }
         }
+        .background(AssetColors.baseBackground.swiftUIColor)
     }
 }
 

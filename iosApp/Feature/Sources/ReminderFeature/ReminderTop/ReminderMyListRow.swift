@@ -18,12 +18,16 @@ public struct ReminderMyListRow: View {
     public var body: some View {
         HStack {
             Image(systemSymbol: myList.icon)
+                .foregroundColor(AssetColors.todayGroupThemeColor.swiftUIColor)
             Text(myList.name)
+                .foregroundColor(AssetColors.myListRowName.swiftUIColor)
             Spacer()
             Text("\(myList.reminders.count)")
+                .foregroundColor(AssetColors.myListRowCount.swiftUIColor)
             Image(systemSymbol: .chevronRight)
+                .foregroundColor(AssetColors.myListRowArrow.swiftUIColor)
         }
         .padding()
-        .background(AssetColors.groupBackground.swiftUIColor)
+        .background(AssetColors.myListRowBackGround.swiftUIColor)
     }
 }

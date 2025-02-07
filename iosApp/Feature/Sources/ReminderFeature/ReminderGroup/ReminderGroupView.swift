@@ -20,7 +20,9 @@ public struct ReminderGroupView: View {
         List {
             ForEach($store.sections, id: \.id) { $section in
                 if let sectionName = section.name {
-                    Section(header: Text(sectionName).foregroundColor(AssetColors.groupSectionName.swiftUIColor)) {
+                    Section(header: Text(sectionName)
+                        .typography(.headline)
+                        .foregroundColor(AssetColors.groupSectionName.swiftUIColor)) {
                         subSectionList(subSections: $section.subSections)
                     }
                 } else {
@@ -48,7 +50,9 @@ public struct ReminderGroupView: View {
     private func subSectionList(subSections: Binding<[ReminderGroup.SubSection]>) -> some View {
         ForEach(subSections, id: \.id) { $subSection in
             if let subSectionName = subSection.name {
-                Section(header: Text(subSectionName).foregroundColor(AssetColors.groupSubSectionName.swiftUIColor)) {
+                Section(header: Text(subSectionName)
+                    .typography(.subheadline)
+                    .foregroundColor(AssetColors.groupSubSectionName.swiftUIColor)) {
                     reminderList(reminders: $subSection.reminders)
                 }
             } else {

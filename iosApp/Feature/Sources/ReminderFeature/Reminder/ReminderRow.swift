@@ -33,10 +33,12 @@ public struct ReminderRow: View {
             .toggleStyle(CheckToggleStyle())
             VStack(alignment: .leading) {
                 TextField("", text: $reminder.title, axis: .vertical)
+                    .typography(.body2)
                     .foregroundColor(AssetColors.reminderRowTitle.swiftUIColor)
                     .focused(focus, equals: reminder.id)
                 if let date = reminder.date {
                     Text(date, format: .numericShortened)
+                        .typography(.subheadline)
                 }
             }
             Spacer()

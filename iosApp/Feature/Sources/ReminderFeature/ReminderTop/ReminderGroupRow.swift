@@ -27,9 +27,11 @@ public struct ReminderGroupRow: View {
                         .foregroundColor(group.themeColor().swiftUIColor)
                     Spacer()
                     Text("\(reminderCount)")
+                        .typography(.largeTitle)
                         .foregroundColor(AssetColors.groupRowCount.swiftUIColor)
                 }
                 Text(group.name)
+                    .typography(.body3)
                     .foregroundColor(AssetColors.groupRowName.swiftUIColor)
             }
             .padding()

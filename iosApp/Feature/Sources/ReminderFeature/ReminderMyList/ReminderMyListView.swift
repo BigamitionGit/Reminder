@@ -29,7 +29,7 @@ public struct ReminderMyListView: View {
             }
         }
         .bind($store.focus, to: self.$focus)
-        .background(AssetColors.baseBackground.swiftUIColor)
+        .listStyle(.plain)
         .navigationTitle(store.myList.name)
         .navigationBarTitleDisplayMode(.large)
         .toolbar {

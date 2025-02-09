@@ -8,6 +8,7 @@ import Tagged
 import ComposableArchitecture
 import Foundation
 import Theme
+import Helper
 
 public struct ReminderMyListsModel: Equatable, Identifiable, Codable {
     public let id: Tagged<Self, UUID>
@@ -39,11 +40,37 @@ extension ReminderMyListModel {
                 id: .init(),
                 myListId: myListId,
                 title: "111",
+                date: Calendar.current.createDate(year: 2024, month: 12, day: 1),
+                isCompleted: false),
+            .init(
+                id: .init(),
+                myListId: myListId,
+                title: "112",
+                date: Calendar.current.createDate(year: 2024, month: 12, day: 1),
+                isCompleted: false),
+            .init(
+                id: .init(),
+                myListId: myListId,
+                title: "113",
+                date: Calendar.current.createDate(year: 2024, month: 12, day: 11),
                 isCompleted: false),
             .init(
                 id: .init(),
                 myListId: myListId,
                 title: "222",
+                date: Calendar.current.createDate(year: 2024, month: 11, day: 1),
+                isCompleted: true),
+            .init(
+                id: .init(),
+                myListId: myListId,
+                title: "333",
+                date: Calendar.current.createDate(year: 2025, month: 12, day: 1),
+                isCompleted: false),
+            .init(
+                id: .init(),
+                myListId: myListId,
+                title: "444",
+                date: Calendar.current.createDate(year: 2025, month: 11, day: 1),
                 isCompleted: true)
         ])
 }

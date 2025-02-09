@@ -122,7 +122,7 @@ public struct ReminderGroup {
                 .flatMap(\.reminders)
                 .filter(!\.isCompleted)
                 .filter(\.date != nil)
-            let subSectionDateFormat = Date.FormatStyle.dateTime.year().month().week().day()
+            let subSectionDateFormat = Date.FormatStyle.dateTime.year().month().weekday().day()
             func updateSuSections(subSections: inout [SubSection], reminder: ReminderModel) {
                 guard let date = reminder.date else { return }
                 let name = date.formatted(subSectionDateFormat)

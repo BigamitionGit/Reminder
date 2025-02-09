@@ -24,13 +24,12 @@ public struct ReminderGroupView: View {
                         .typography(.headline)
                         .foregroundColor(AssetColors.groupSectionName.swiftUIColor)) {
                         subSectionList(subSections: $section.subSections)
-                    }
+                        }.listSectionSeparator(.hidden)
                 } else {
                     subSectionList(subSections: $section.subSections)
                 }
             }
         }
-        .background(AssetColors.baseBackground.swiftUIColor)
         .listStyle(.plain)
         .bind($store.focus, to: self.$focus)
         .navigationTitle(store.group.name)
@@ -55,6 +54,7 @@ public struct ReminderGroupView: View {
                     .foregroundColor(AssetColors.groupSubSectionName.swiftUIColor)) {
                     reminderList(reminders: $subSection.reminders)
                 }
+                    .listSectionSeparator(.hidden)
             } else {
                 reminderList(reminders: $subSection.reminders)
             }
@@ -65,5 +65,13 @@ public struct ReminderGroupView: View {
         ForEach(reminders, id: \.id) { $reminder in
             ReminderRow(reminder: $reminder, focus: $focus)
         }
+    }
+}
+
+#Preview {
+    @Shared(.myLists) var model = ReminderMyListsModel(id: .init(),
+                                                       myLists: [.mock])
+    NavigationStack {
+        ReminderGroupView(store: .init(initialState: ReminderGroup.State(group: .hasDate), reducer: { ReminderGroup() }))
     }
 }

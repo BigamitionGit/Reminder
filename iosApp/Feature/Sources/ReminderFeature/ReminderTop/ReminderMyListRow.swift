@@ -18,6 +18,8 @@ public struct ReminderMyListRow: View {
     public var body: some View {
         HStack {
             Image(systemSymbol: myList.icon)
+                .resizable()
+                .frame(width: 32, height: 32)
                 .foregroundColor(AssetColors.todayGroupThemeColor.swiftUIColor)
             Text(myList.name)
                 .typography(.body1)
@@ -32,4 +34,8 @@ public struct ReminderMyListRow: View {
         .padding()
         .background(AssetColors.myListRowBackGround.swiftUIColor)
     }
+}
+
+#Preview {
+    ReminderMyListRow(myList: .mock)
 }

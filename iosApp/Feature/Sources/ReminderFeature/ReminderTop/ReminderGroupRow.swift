@@ -20,10 +20,11 @@ public struct ReminderGroupRow: View {
     public var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 12)
-                .foregroundColor(AssetColors.groupRowBackground.swiftUIColor)
             VStack(alignment: .leading, spacing: 16) {
                 HStack {
                     Image(systemSymbol: group.icon)
+                        .resizable()
+                        .frame(width: 32, height: 32)
                         .foregroundColor(group.themeColor().swiftUIColor)
                     Spacer()
                     Text("\(reminderCount)")
@@ -36,5 +37,13 @@ public struct ReminderGroupRow: View {
             }
             .padding()
         }
+        .foregroundColor(AssetColors.groupRowBackground.swiftUIColor)
     }
+}
+
+#Preview {
+    ReminderGroupRow(
+        group: .all,
+        reminderCount: 3)
+    .frame(width: 160, height: 40)
 }

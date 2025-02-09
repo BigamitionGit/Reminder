@@ -12,8 +12,8 @@ public struct ReminderTopView: View {
     @Bindable private var store: StoreOf<ReminderTop>
 
     private let columns = [
-        GridItem(.flexible()),
-        GridItem(.flexible())
+        GridItem(.flexible(), spacing: 16),
+        GridItem(.flexible(), spacing: 16)
     ]
 
     public init(store: StoreOf<ReminderTop>) {
@@ -31,16 +31,21 @@ public struct ReminderTopView: View {
                     }
                 }
             }
-            LazyVStack {
+            LazyVStack(spacing: 0) {
                 ForEach(store.model.myLists, id: \.id) { myList in
                     Button {
                         store.send(.view(.myListTapped(myList.id)))
                     } label: {
                         ReminderMyListRow(myList: myList)
                     }
+                    if store.model.myLists.last != myList {
+                        Divider()
+                    }
                 }
             }
+            .clipShape(RoundedRectangle(cornerRadius: 8))
         }
+        .padding()
         .background(AssetColors.baseBackground.swiftUIColor)
     }
 }

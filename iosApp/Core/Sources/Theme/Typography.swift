@@ -25,7 +25,7 @@ public struct Typography: Sendable {
     public static let body3 = Typography(
         textStyle: .body,
         weight: .bold,
-        width: .compressed,
+        width: .expanded,
         leading: .standard)
     public static let headline = Typography(
         textStyle: .title2,

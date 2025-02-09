@@ -13,9 +13,10 @@
     <string name="reminder_myList_add">リストを追加</string>
     <string name="reminder_top_edit">リストを編集</string>
     <string name="reminder_details">詳細</string>
-    <string name="reminder_details_Done">完了</string>
-    <string name="reminder_details_Cancel">キャンセル</string>
-    <string name="reminder_details_Date">日付</string>
-    <string name="reminder_details_Time">時刻</string>
-    <string name="reminder_details_List">リスト</string>
+    <string name="reminder_details_done">完了</string>
+    <string name="reminder_details_cancel">キャンセル</string>
+    <string name="reminder_details_date">日付</string>
+    <string name="reminder_details_time">時刻</string>
+    <string name="reminder_details_list">リスト</string>
+    <string name="reminder_details_notes">メモ</string>
 </resources>

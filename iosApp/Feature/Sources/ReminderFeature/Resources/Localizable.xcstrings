@@ -222,7 +222,7 @@
         }
       }
     },
-    "reminder_details_Done": {
+    "reminder_details_done": {
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -239,7 +239,7 @@
         }
       }
     },
-    "reminder_details_Cancel": {
+    "reminder_details_cancel": {
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -256,7 +256,7 @@
         }
       }
     },
-    "reminder_details_Date": {
+    "reminder_details_date": {
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -273,7 +273,7 @@
         }
       }
     },
-    "reminder_details_Time": {
+    "reminder_details_time": {
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -290,7 +290,7 @@
         }
       }
     },
-    "reminder_details_List": {
+    "reminder_details_list": {
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -303,6 +303,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "リスト"
+          }
+        }
+      }
+    },
+    "reminder_details_notes": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notes"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "メモ"
           }
         }
       }

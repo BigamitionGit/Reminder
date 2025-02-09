@@ -44,10 +44,6 @@ public struct ReminderMyList {
             case deleteReminders(IndexSet)
         }
 
-        public enum Delegate {
-            case update(ReminderMyListModel.ID, IdentifiedArrayOf<ReminderModel>)
-        }
-
         public enum Internal {
             case changeFocus(ReminderModel.ID)
         }

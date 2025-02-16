@@ -40,37 +40,37 @@ extension ReminderMyListModel {
                 id: .init(),
                 myListId: myListId,
                 title: "111",
-                date: Calendar.current.createDate(year: 2024, month: 12, day: 1),
+                dueDate: Calendar.current.createDate(year: 2024, month: 12, day: 1).map { .init(date: $0, isYearMonthDayOnly: false) },
                 isCompleted: false),
             .init(
                 id: .init(),
                 myListId: myListId,
                 title: "112",
-                date: Calendar.current.createDate(year: 2024, month: 12, day: 1),
+                dueDate: Calendar.current.createDate(year: 2024, month: 12, day: 1).map { .init(date: $0, isYearMonthDayOnly: false) },
                 isCompleted: false),
             .init(
                 id: .init(),
                 myListId: myListId,
                 title: "113",
-                date: Calendar.current.createDate(year: 2024, month: 12, day: 11),
+                dueDate: Calendar.current.createDate(year: 2024, month: 12, day: 11).map { .init(date: $0, isYearMonthDayOnly: false) },
                 isCompleted: false),
             .init(
                 id: .init(),
                 myListId: myListId,
                 title: "222",
-                date: Calendar.current.createDate(year: 2024, month: 11, day: 1),
+                dueDate: Calendar.current.createDate(year: 2024, month: 11, day: 1).map { .init(date: $0, isYearMonthDayOnly: false) },
                 isCompleted: true),
             .init(
                 id: .init(),
                 myListId: myListId,
                 title: "333",
-                date: Calendar.current.createDate(year: 2025, month: 12, day: 1),
+                dueDate: Calendar.current.createDate(year: 2025, month: 12, day: 1).map { .init(date: $0, isYearMonthDayOnly: false) },
                 isCompleted: false),
             .init(
                 id: .init(),
                 myListId: myListId,
                 title: "444",
-                date: Calendar.current.createDate(year: 2025, month: 11, day: 1),
+                dueDate: Calendar.current.createDate(year: 2025, month: 11, day: 1).map { .init(date: $0, isYearMonthDayOnly: false) },
                 isCompleted: true)
         ])
 }

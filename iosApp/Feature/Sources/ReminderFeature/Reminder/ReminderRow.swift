@@ -14,12 +14,18 @@ public struct ReminderRow: View {
     @Binding private var reminder: ReminderModel
     private var focus: FocusState<ReminderModel.ID?>.Binding
     private let isNew: Bool
+    private let infoTapped: () -> Void
 
-    public init(reminder: Binding<ReminderModel>, focus: FocusState<ReminderModel.ID?>.Binding, isNew: Bool = false) {
-        self._reminder = reminder
-        self.focus = focus
-        self.isNew = isNew
-    }
+    public init(
+        reminder: Binding<ReminderModel>,
+        focus: FocusState<ReminderModel.ID?>.Binding,
+        isNew: Bool = false,
+        infoTapped: @escaping () -> Void) {
+            self._reminder = reminder
+            self.focus = focus
+            self.isNew = isNew
+            self.infoTapped = infoTapped
+        }
 
     public var body: some View {
         HStack(alignment: .top) {
@@ -36,14 +42,16 @@ public struct ReminderRow: View {
                     .typography(.body2)
                     .foregroundColor(AssetColors.reminderRowTitle.swiftUIColor)
                     .focused(focus, equals: reminder.id)
-                if let date = reminder.date {
+                if let date = reminder.dueDate?.date {
                     Text(date, format: .numericShortened)
                         .typography(.subheadline)
                 }
             }
             Spacer()
             if focus.wrappedValue == reminder.id {
-                Image(systemSymbol: .infoCircle)
+                Button(action: infoTapped) {
+                    Image(systemSymbol: .infoCircle)
+                }
             }
         }
         .background(AssetColors.reminderRowBackground.swiftUIColor)

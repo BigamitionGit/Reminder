@@ -63,7 +63,7 @@ public struct ReminderGroupView: View {
 
     private func reminderList(reminders: Binding<IdentifiedArrayOf<ReminderModel>>) -> some View {
         ForEach(reminders, id: \.id) { $reminder in
-            ReminderRow(reminder: $reminder, focus: $focus)
+            ReminderRow(reminder: $reminder, focus: $focus) {}
         }
     }
 }

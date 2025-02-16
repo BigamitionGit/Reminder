@@ -121,10 +121,10 @@ public struct ReminderGroup {
             let scheduledReminders = myLists
                 .flatMap(\.reminders)
                 .filter(!\.isCompleted)
-                .filter(\.date != nil)
+                .filter(\.dueDate?.date != nil)
             let subSectionDateFormat = Date.FormatStyle.dateTime.year().month().weekday().day()
             func updateSuSections(subSections: inout [SubSection], reminder: ReminderModel) {
-                guard let date = reminder.date else { return }
+                guard let date = reminder.dueDate?.date else { return }
                 let name = date.formatted(subSectionDateFormat)
                 if let index = subSections.firstIndex(where: \.name == name) {
                     subSections[index].reminders.append(reminder)
@@ -147,7 +147,7 @@ public struct ReminderGroup {
                 range: 0..<12)
                 .map { month in
                     let monthReminders = scheduledReminders.filter { reminder in
-                        guard let date = reminder.date else { return false }
+                        guard let date = reminder.dueDate?.date else { return false }
                         return calendar.isSameMonth(date1: date, date2: month)
                     }
                     return Section(name: month.formatted(.dateTime.month()),

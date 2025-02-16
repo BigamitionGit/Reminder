@@ -12,24 +12,24 @@ import Tagged
 
 @Reducer
 public struct ReminderMyList {
+    @Reducer(state: .equatable)
+    public enum Destination {
+        case add(ReminderDetail)
+    }
     @ObservableState
     public struct State: Equatable {
         @Shared public var myList: ReminderMyListModel
         public var initial: ReminderModel?
         public var focus: ReminderModel.ID?
+        @Presents public var destination: Destination.State?
 
-        public init(myList: Shared<ReminderMyListModel>, initial: ReminderModel? = nil, focus: ReminderModel.ID? = nil) {
-            self._myList = myList
-            self.initial = initial
-            self.focus = focus
-        }
-
-        public init?(myListId: ReminderMyListModel.ID, initial: ReminderModel? = nil, focus: ReminderModel.ID? = nil) {
+        public init?(myListId: ReminderMyListModel.ID, initial: ReminderModel? = nil, focus: ReminderModel.ID? = nil, destination: Destination.State? = nil) {
             @Shared(.myLists) var myLists
             guard let my = Shared($myLists.myLists[id: myListId]) else { return nil }
             self._myList = my
             self.initial = initial
             self.focus = focus
+            self.destination = destination
         }
     }
 
@@ -37,11 +37,15 @@ public struct ReminderMyList {
         case view(View)
         case `internal`(Internal)
         case binding(BindingAction<State>)
+        case destination(PresentationAction<Destination.Action>)
 
         public enum View {
             case onAppear
-            case editDone
+            case doneEditButtonTapped
             case deleteReminders(IndexSet)
+            case infoTapped(ReminderModel)
+            case doneDetailEditButtonTapped
+            case cancelDetailEditButtonTapped
         }
 
         public enum Internal {
@@ -72,16 +76,33 @@ public struct ReminderMyList {
                     _ = state.$myList.withLock { $0.reminders.remove(id: edit.id) }
                 }
                 return .none
-            case .view(.editDone):
+            case .view(.doneEditButtonTapped):
                 state.focus = nil
                 return .none
             case let .view(.deleteReminders(indices)):
                 state.$myList.withLock { $0.reminders.remove(atOffsets: indices) }
                 return .none
-            case .binding:
+            case let .view(.infoTapped(reminder)):
+                state.destination = .add(ReminderDetail.State(reminder: reminder))
+                return .none
+            case .view(.doneDetailEditButtonTapped):
+                guard case let .some(.add(detailState)) = state.destination else { return .none }
+                if let new = state.initial, new.id == detailState.editedReminder.id {
+                    _ = state.$myList.withLock { $0.reminders.append(detailState.reminder) }
+                    state.initial = .init(id: .init(uuid()), myListId: state.myList.id)
+                } else {
+                    state.$myList.withLock { $0.reminders[id: detailState.reminder.id] = detailState.reminder }
+                }
+                state.destination = nil
+                return .none
+            case .view(.cancelDetailEditButtonTapped):
+                state.destination = nil
+                return .none
+            case .binding, .destination:
                 return .none
             }
         }
+        .ifLet(\.$destination, action: \.destination)
         .onChange(of: \.focus) { old, _ in
             Reduce { _, _ in
                 changeFocusEffect(id: old)
@@ -97,13 +118,4 @@ public struct ReminderMyList {
             return .none
         }
     }
-}
-
-extension ReminderMyList.State {
-    private static let myListId = ReminderMyListModel.ID()
-    static let mock: Self = .init(
-        myList: Shared(
-            value: .mock),
-        initial: nil,
-        focus: nil)
 }

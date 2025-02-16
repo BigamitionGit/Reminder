@@ -33,7 +33,7 @@ public struct ReminderTop {
                         group,
                         allReminder
                             .filter(!\.isCompleted)
-                            .filter(\.date != nil)
+                            .filter(\.dueDate?.date != nil)
                             .count
                     )
                 case .all:
@@ -104,6 +104,7 @@ extension IdentifiedArrayOf<ReminderMyListModel> {
             .init(id: .init(), myListId: myListIds[1], title: "111",
                   isCompleted: false),
             .init(id: .init(), myListId: myListIds[1], title: "222",
-                  isCompleted: true)])
+                  isCompleted: true)]),
+    .mock
   ]
 }

@@ -19,4 +19,6 @@
     <string name="reminder_details_time">Time</string>
     <string name="reminder_details_list">List</string>
     <string name="reminder_details_notes">Notes</string>
+    <string name="reminder_details_title">Title</string>
+    <string name="reminder_details_url">URL</string>
 </resources>

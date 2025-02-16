@@ -13,26 +13,36 @@ public struct ReminderModel: Equatable, Identifiable, Codable {
     public let id: Tagged<Self, UUID>
     public let myListId: ReminderMyListModel.ID
     public var title: String
-    public var date: Date?
+    public var dueDate: DueDate?
     public var isCompleted: Bool
     public var isInvalid: Bool {
         title.isEmpty
     }
     public var isToday: Bool {
-        guard let date else { return false }
+        guard let date = dueDate?.date else { return false }
         let calendar = Calendar.current
         return calendar.isDateInToday(date)
     }
     public var isPastDue: Bool {
-        guard let date else { return false }
+        guard let date = dueDate?.date else { return false }
         return date < Date()
     }
 
-    public init(id: Tagged<Self, UUID>, myListId: ReminderMyListModel.ID, title: String = "", date: Date? = nil, isCompleted: Bool = false) {
+    public init(id: Tagged<Self, UUID>, myListId: ReminderMyListModel.ID, title: String = "", dueDate: DueDate? = nil, isCompleted: Bool = false) {
         self.id = id
         self.myListId = myListId
         self.title = title
-        self.date = date
+        self.dueDate = dueDate
         self.isCompleted = isCompleted
+    }
+
+    public struct DueDate: Equatable, Codable {
+        public var date: Date
+        public var isYearMonthDayOnly: Bool
+
+        public init(date: Date, isYearMonthDayOnly: Bool) {
+            self.date = date
+            self.isYearMonthDayOnly = isYearMonthDayOnly
+        }
     }
 }

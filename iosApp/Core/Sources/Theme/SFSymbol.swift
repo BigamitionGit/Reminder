@@ -13,6 +13,7 @@ public enum SFSymbol: String, Codable {
     case circle = "circle"
     case clockFill = "clock.fill"
     case circleDotted = "circle.dotted"
+    case calendar = "calendar"
     case calendarCircleFill = "calendar.circle.fill"
     case trayCircleFill = "tray.circle.fill"
     case checkmarkCircleFill = "checkmark.circle.fill"

@@ -19,4 +19,6 @@
     <string name="reminder_details_time">時刻</string>
     <string name="reminder_details_list">リスト</string>
     <string name="reminder_details_notes">メモ</string>
+    <string name="reminder_details_title">タイトル</string>
+    <string name="reminder_details_url">URL</string>
 </resources>

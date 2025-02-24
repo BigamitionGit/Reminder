@@ -48,6 +48,7 @@ public struct ReminderMyList {
             case cancelDetailEditButtonTapped
         }
 
+        @CasePathable
         public enum Internal {
             case changeFocus(ReminderModel.ID)
         }

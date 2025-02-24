@@ -32,11 +32,14 @@ let package = Package(
             plugins: [
                 .lint
             ]),
+        .testTarget(name: "Tests",
+                    dependencies: [.root])
     ]
 )
 
 extension Target.Dependency: @unchecked Sendable {
     static let sharedKit: Target.Dependency = "SharedKit"
+    static let root: Target.Dependency = "Root"
     static let reminder: Target.Dependency = "ReminderFeature"
     static let core: Target.Dependency = .product(name: "Core", package: "Core")
 }

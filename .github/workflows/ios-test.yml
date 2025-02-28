@@ -1,0 +1,17 @@
+name: iOS Test
+
+on:
+  push:
+    branches: [ "ci-test" ]
+
+jobs:
+  test-ios:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-java
+      - run: ./scripts/bootstrap.sh
+        working-directory: iosApp
+      - run: ./scripts/test.sh
+        working-directory: iosApp

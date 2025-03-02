@@ -10,14 +10,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
+      - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.1'
-      - name: Install dependencies
-        run: gem install nokogiri
+          ruby-version: '2.6.10'
       - uses: ./.github/actions/setup-java
       - run: ./scripts/bootstrap.sh
         working-directory: iosApp
+      - run: xcodebuild -version
       - run: ./scripts/test.sh
         working-directory: iosApp

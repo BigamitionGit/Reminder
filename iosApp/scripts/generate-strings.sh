@@ -6,7 +6,8 @@ PROJECT_ROOT_DIR=$(cd $(dirname $0)/../..; pwd)
 cd $PROJECT_ROOT_DIR
 pwd
 
-bundle install
+gem install bundler -v 2.6.7
+bundle _2.6.7_ install
 
 # convert strings.xml to Localizable.xcstrings
 echo "↔️  Converting strings.xml to Localizable.xcstrings..."

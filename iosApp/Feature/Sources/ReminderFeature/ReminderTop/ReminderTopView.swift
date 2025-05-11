@@ -7,9 +7,11 @@
 import SwiftUI
 import ComposableArchitecture
 import Theme
+import Inject
 
 public struct ReminderTopView: View {
     @Bindable private var store: StoreOf<ReminderTop>
+    @ObserveInjection var inject
 
     private let columns = [
         GridItem(.flexible(), spacing: 16),
@@ -47,6 +49,7 @@ public struct ReminderTopView: View {
         }
         .padding()
         .background(AssetColors.baseBackground.swiftUIColor)
+        .enableInjection()
     }
 }
 

@@ -15,14 +15,16 @@ let package = Package(
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "1.13.0"),
         .package(url: "https://github.com/SimplyDanny/SwiftLintPlugins", exact: "0.57.0"),
         .package(url: "https://github.com/SwiftGen/SwiftGenPlugin", from: "6.6.2"),
-        .package(url: "https://github.com/pointfreeco/swift-tagged", from: "0.10.0")
+        .package(url: "https://github.com/pointfreeco/swift-tagged", from: "0.10.0"),
+        .package(url: "https://github.com/krzysztofzablocki/Inject.git", from: "1.5.2")
     ],
     targets: [
         .target(
             name: "Helper",
             dependencies: [
                 .tca,
-                .tagged
+                .tagged,
+                .inject
             ],
             plugins: [
                 .lint
@@ -43,6 +45,7 @@ let package = Package(
 extension Target.Dependency: @unchecked Sendable {
     static let tca: Target.Dependency = .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
     static let tagged: Target.Dependency = .product(name: "Tagged", package: "swift-tagged")
+    static let inject: Target.Dependency = .product(name: "Inject", package: "Inject")
 }
 
 extension Target.PluginUsage: @unchecked Sendable {

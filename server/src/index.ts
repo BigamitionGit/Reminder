@@ -5,12 +5,42 @@ import { GraphQLScalarType, Kind } from 'graphql';
 const typeDefs = `#graphql
   scalar Date
 
+  type DueDate { 
+    date: Date!
+    isYearMonthDayOnly: Boolean!
+  }
+
+  type MyList {
+    id: ID!
+    name: String!
+    icon: String!
+    reminderConnection(first: Int, after: ID): ReminderConnection
+  }
+
+  type ReminderConnection { 
+    edges: [ReminderEdge!]!
+    pageInfo: PageInfo!
+    totalCount: Int!
+  }
+
+  type ReminderEdge {
+    cursor: ID!
+    node: Reminder!
+  }
+
   type Reminder {
     id: ID!
     myListId: ID!
     title: String!
     dueDate: DueDate
     isCompleted: Boolean!
+  }
+
+  type PageInfo {
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+    startCursor: String
+    endCursor: String
   }
 
   input AddReminderInput {
@@ -38,20 +68,9 @@ const typeDefs = `#graphql
     isYearMonthDayOnly: Boolean!
   }
 
-  type DueDate { 
-    date: Date!
-    isYearMonthDayOnly: Boolean!
-  }
-
-  type MyList {
-    id: ID!
-    name: String!
-    icon: String!
-    reminders: [Reminder]
-  }
-
   type Query {
-    myLists: [MyList]
+    myLists: [MyList!]!
+    myList(id: ID!): MyList
   }
 
   type Mutation {

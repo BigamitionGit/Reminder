@@ -80,50 +80,53 @@ const typeDefs = `#graphql
   }
 `;
 
+interface DueDate { date: Date; isYearMonthDayOnly: boolean; }
+interface Reminder { id: string; myListId: string; title: string; dueDate?: DueDate; isCompleted: boolean; }
+interface MyList { id: string; name: string; icon: string; }
+
 const myLists = [
     {
       id: "1",
       name: "Work",
       icon: "tray.circle.fill",
-      reminders: [
-        {
-          id: "101",
-          myListId: "1",
-          title: "Finish project report",
-          dueDate: { date: new Date("2025-04-10T09:00:00Z"), isYearMonthDayOnly: false },
-          isCompleted: false,
-        },
-        {
-          id: "102",
-          myListId: "1",
-          title: "Prepare presentation",
-          dueDate: { date: new Date("2025-04-12T10:30:00Z"), isYearMonthDayOnly: true },
-          isCompleted: false,
-        },
-      ],
     },
     {
       id: "2",
       name: "Personal",
       icon: "calendar.circle.fill",
-      reminders: [
-        {
-          id: "201",
-          myListId: "2",
-          title: "Buy groceries",
-          dueDate: { date: new Date("2025-04-08T17:00:00Z"), isYearMonthDayOnly: true },
-          isCompleted: true,
-        },
-        {
-          id: "202",
-          myListId: "2",
-          title: "Call mom",
-          dueDate: { date: new Date("2025-04-09T19:00:00Z"), isYearMonthDayOnly: false },
-          isCompleted: false,
-        },
-      ],
     },
   ];
+
+const reminders: Reminder[] = [
+  {
+    id: "101",
+    myListId: "1",
+    title: "Finish project report",
+    dueDate: { date: new Date("2025-04-10T09:00:00Z"), isYearMonthDayOnly: false },
+    isCompleted: false,
+  },
+  {
+    id: "102",
+    myListId: "1",
+    title: "Prepare presentation",
+    dueDate: { date: new Date("2025-04-12T10:30:00Z"), isYearMonthDayOnly: true },
+    isCompleted: false,
+  },
+  {
+    id: "201",
+    myListId: "2",
+    title: "Buy groceries",
+    dueDate: { date: new Date("2025-04-08T17:00:00Z"), isYearMonthDayOnly: true },
+    isCompleted: true,
+  },
+  {
+    id: "202",
+    myListId: "2",
+    title: "Call mom",
+    dueDate: { date: new Date("2025-04-09T19:00:00Z"), isYearMonthDayOnly: false },
+    isCompleted: false,
+  },
+];
 
 const dateScalar = new GraphQLScalarType({
     name: 'Date',
@@ -152,49 +155,64 @@ const resolvers = {
     Date: dateScalar,
     Query: {
       myLists: () => myLists,
+      myList: (_: any, { id }: { id: string }) =>
+        myLists.find(list => list.id === id) || null,
     },
-    Mutation: { 
-        addReminder: (_: any, { input }: { input: any }) => {
-            const newReminder = {
-              id: input.id,
-              myListId: input.myListId,
-              title: input.title,
-              dueDate: input.dueDate,
-              isCompleted: input.isCompleted,
-            };
-      
-            const list = myLists.find((list) => list.id === input.myListId);
-            if (list) {
-              list.reminders.push(newReminder);
-            }
-      
-            return newReminder;
-        },
-      
-        updateReminder: (_: any, { input }: { input: any }) => {
-            for (const list of myLists) {
-              const reminder = list.reminders.find((r) => r.id === input.id);
-              if (reminder) {
-                if (input.title !== undefined) reminder.title = input.title;
-                if (input.dueDate !== undefined) reminder.dueDate = input.dueDate;
-                if (input.isCompleted !== undefined) reminder.isCompleted = input.isCompleted;
-                return reminder;
-              }
-            }
-            return null;
-        },
-      
-        deleteReminder: (_: any, { input }: { input: any }) => {
-            for (const list of myLists) {
-              const index = list.reminders.findIndex((r) => r.id === input.id);
-              if (index !== -1) {
-                list.reminders.splice(index, 1);
-                return input.id;
-              }
-            }
-            return null;
-        },
-    }
+  
+    MyList: {
+      reminderConnection: (
+        parent: MyList,
+        { first, after }: { first?: number; after?: string }
+      ) => {
+        const all = reminders.filter(r => r.myListId === parent.id);
+        const startIndex = after
+          ? all.findIndex(r => r.id === after) + 1
+          : 0;
+        const limit = typeof first === 'number' ? first : all.length;
+        const slice = all.slice(startIndex, startIndex + limit);
+        const edges = slice.map(r => ({ cursor: r.id, node: r }));
+        const endIndex = startIndex + slice.length;
+        return {
+          edges,
+          totalCount: all.length,
+          pageInfo: {
+            hasNextPage:    endIndex < all.length,
+            hasPreviousPage: startIndex > 0,
+            startCursor:    edges[0]?.cursor || null,
+            endCursor:      edges[edges.length - 1]?.cursor || null,
+          },
+        };
+      },
+    },
+  
+    Mutation: {
+      addReminder: (_: any, { input }: { input: Reminder }) => {
+        const newReminder: Reminder = { ...input };
+        reminders.push(newReminder);
+        return newReminder;
+      },
+  
+      updateReminder: (
+        _: any,
+        { input }: { input: Partial<Reminder> & { id: string } }
+      ) => {
+        const idx = reminders.findIndex(r => r.id === input.id);
+        if (idx === -1) {
+          throw new Error(`Reminder with id ${input.id} not found`);
+        }
+        reminders[idx] = { ...reminders[idx], ...input } as Reminder;
+        return reminders[idx];
+      },
+  
+      deleteReminder: (_: any, { input }: { input: { id: string } }) => {
+        const idx = reminders.findIndex(r => r.id === input.id);
+        if (idx === -1) {
+          throw new Error(`Reminder with id ${input.id} not found`);
+        }
+        reminders.splice(idx, 1);
+        return input.id;
+      },
+    },
 };
 
 const server = new ApolloServer({

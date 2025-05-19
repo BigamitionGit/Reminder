@@ -1,0 +1,25 @@
+query MyList($myListId: ID!, $first: Int, $after: ID) {
+    myList(id: $myListId) {
+        name
+        id
+        reminderConnection(first: $first, after: $after) {
+            edges {
+                cursor
+                node {
+                    title
+                    myListId
+                    isCompleted
+                    id
+                    dueDate {
+                        date
+                        isYearMonthDayOnly
+                    }
+                }
+            }
+            pageInfo {
+                hasNextPage
+                endCursor
+            }
+        }
+    }
+}

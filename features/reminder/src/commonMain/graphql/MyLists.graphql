@@ -1,17 +1,10 @@
 query MyLists {
     myLists {
-        icon
         id
+        icon
         name
-        reminders {
-            dueDate {
-                isYearMonthDayOnly
-                date
-            }
-            id
-            title
-            isCompleted
-            myListId
+        reminderConnection {
+            totalCount
         }
     }
 }

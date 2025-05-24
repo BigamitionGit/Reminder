@@ -9,6 +9,7 @@ import Foundation
 import Helper
 import Tagged
 import Theme
+import SharedKit
 
 @Reducer
 public struct ReminderTop {
@@ -74,7 +75,13 @@ public struct ReminderTop {
     public var body: some ReducerOf<Self> {
         Reduce { _, action in
             switch action {
-            case .view(.onAppear), .view(.groupTapped), .view(.myListTapped):
+            case .view(.onAppear):
+                let a = ReminderRepository()
+                Task {
+                    let mylists = try await a.fetchMyLists()
+                }
+                return .none
+            case .view(.groupTapped), .view(.myListTapped):
                 return .none
             }
         }

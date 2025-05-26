@@ -1,0 +1,39 @@
+CREATE TABLE ReminderEntity (
+    id TEXT NOT NULL PRIMARY KEY,
+    myListId TEXT NOT NULL,
+    title TEXT NOT NULL,
+    dueDateTimestamp INTEGER, -- Store Instant.epochSeconds
+    dueDateIsYearMonthDayOnly INTEGER, -- Boolean: 0 for false, 1 for true
+    isCompleted INTEGER NOT NULL DEFAULT 0 -- Boolean: 0 for false, 1 for true
+);
+
+selectAllReminders:
+SELECT * FROM ReminderEntity;
+
+selectRemindersByListId:
+SELECT * FROM ReminderEntity WHERE myListId = ?;
+
+selectReminderById:
+SELECT * FROM ReminderEntity WHERE id = ?;
+
+insertReminder:
+INSERT OR REPLACE INTO ReminderEntity(id, myListId, title, dueDateTimestamp, dueDateIsYearMonthDayOnly, isCompleted)
+VALUES (?, ?, ?, ?, ?, ?);
+
+updateReminderCompletion:
+UPDATE ReminderEntity SET isCompleted = ? WHERE id = ?;
+
+deleteReminderById:
+DELETE FROM ReminderEntity WHERE id = ?;
+
+deleteRemindersByListId:
+DELETE FROM ReminderEntity WHERE myListId = ?;
+
+selectIncompleteRemindersWithDueDate:
+SELECT * FROM ReminderEntity WHERE isCompleted = 0 AND dueDateTimestamp IS NOT NULL;
+
+selectAllIncompleteReminders:
+SELECT * FROM ReminderEntity WHERE isCompleted = 0;
+
+selectCompletedReminders:
+SELECT * FROM ReminderEntity WHERE isCompleted = 1;

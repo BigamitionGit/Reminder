@@ -1,0 +1,15 @@
+CREATE TABLE ReminderListEntity (
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    icon TEXT NOT NULL
+);
+
+selectAllLists:
+SELECT * FROM ReminderListEntity;
+
+insertList:
+INSERT OR REPLACE INTO ReminderListEntity(id, name, icon)
+VALUES (?, ?, ?);
+
+deleteListById:
+DELETE FROM ReminderListEntity WHERE id = ?;
